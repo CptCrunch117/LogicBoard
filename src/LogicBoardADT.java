@@ -3,7 +3,7 @@ import gates.Gate;
 import java.util.ArrayList;
 
 /**
- * Created by CptAmerica on 6/2/15.
+ * Created by Kyle Ferguson on 6/2/15.
  * This methods constructor should initialize it's arraylist with all OOD (output only devices) more OODs can be
  * added later however!
  */

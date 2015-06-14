@@ -1,7 +1,7 @@
 package gates;
 
 /**
- * Created by Vader on 6/1/2015.
+ * Created by Kyle Ferguson on 6/1/2015.
  */
 public interface OOD {
 

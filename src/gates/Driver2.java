@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Created by Vader on 6/1/2015.
+ * Created by Kyle Ferguson on 6/1/2015.
  */
 public class Driver2 {
 

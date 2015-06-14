@@ -1,7 +1,7 @@
 package Exceptions;
 
 /**
- * Created by CptAmerica on 6/10/15.
+ * Created by Kyle Ferguson on 6/10/15.
  */
 public class NoSuchGateException extends RuntimeException {
 

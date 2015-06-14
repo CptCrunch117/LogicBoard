@@ -3,7 +3,7 @@ package gates;
 import java.util.Random;
 
 /**
- * Created by CptAmerica on 6/3/15.
+ * Created by Kyle Ferguson on 6/3/15.
  */
 public class Ghost implements Gate{
 

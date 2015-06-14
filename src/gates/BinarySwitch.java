@@ -3,7 +3,7 @@ package gates;
 import java.util.ArrayList;
 
 /**
- * Created by Vader on 5/31/2015.
+ * Created by Kyle Ferguson on 5/31/2015.
  */
 public class BinarySwitch implements Gate
 {

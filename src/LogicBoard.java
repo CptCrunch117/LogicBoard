@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 
 /**
- * Created by CptAmerica on 6/2/15.
+ * Created by Kyle Ferguson on 6/2/15.
  */
 public class LogicBoard implements LogicBoardADT {
     static final String AND = "and";

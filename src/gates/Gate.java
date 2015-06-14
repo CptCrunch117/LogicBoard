@@ -1,7 +1,7 @@
 package gates;
 
 /**
- * Created by Vader on 5/10/2015.
+ * Created by Kyle Ferguson on 5/10/2015.
  */
 public interface Gate {
 

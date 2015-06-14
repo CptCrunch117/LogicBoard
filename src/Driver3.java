@@ -2,7 +2,7 @@
 import java.util.Scanner;
 
 /**
- * Created by CptAmerica on 6/3/15.
+ * Created by Kyle Ferguson on 6/3/15.
  */
 public class Driver3 {
 

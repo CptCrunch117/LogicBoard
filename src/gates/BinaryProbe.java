@@ -3,7 +3,7 @@ package gates;
 import java.math.BigInteger;
 
 /**
- * Created by CptAmerica on 6/2/15.
+ * Created by Kyle Ferguson on 6/2/15.
  */
 public class BinaryProbe implements Gate{
 
