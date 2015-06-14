@@ -130,3 +130,4 @@ Gate (((A'+B)+CD)+E+F)':
 
 Process finished with exit code 0
 
+
