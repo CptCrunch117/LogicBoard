@@ -1,11 +1,12 @@
 package gates;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Kyle Ferguson on 5/10/2015.
  */
-public class And implements Gate{
+public class And implements Gate, Serializable{
 
     private int output;
     private String nameID;

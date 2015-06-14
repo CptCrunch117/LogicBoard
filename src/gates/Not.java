@@ -1,9 +1,11 @@
 package gates;
 
+import java.io.Serializable;
+
 /**
  * Created by Kyle Ferguson on 5/31/2015.
  */
-public class Not implements Gate {
+public class Not implements Gate, Serializable {
 
 
     private int output;

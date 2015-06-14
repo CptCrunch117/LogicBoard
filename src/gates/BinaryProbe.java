@@ -1,11 +1,12 @@
 package gates;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
  * Created by Kyle Ferguson on 6/2/15.
  */
-public class BinaryProbe implements Gate{
+public class BinaryProbe implements Gate, Serializable{
 
     private final String TYPE = "IOD";
     private final String GATE = "BinaryProbe";

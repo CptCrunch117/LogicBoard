@@ -1,5 +1,7 @@
 package gates;
 
+import java.io.Serializable;
+
 /**
  * Created by Kyle Ferguson on 5/10/2015.
  */

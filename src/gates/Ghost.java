@@ -1,11 +1,12 @@
 package gates;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by Kyle Ferguson on 6/3/15.
  */
-public class Ghost implements Gate{
+public class Ghost implements Gate, Serializable {
 
     private final String TYPE = "IAOD";
     private final String GATE = "GHOST";

@@ -1,9 +1,11 @@
 package gates;
 
+import java.io.Serializable;
+
 /**
  * Created by Kyle Ferguson on 5/31/2015.
  */
-public class Or implements Gate {
+public class Or implements Gate, Serializable {
 
 
     private int output;

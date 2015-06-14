@@ -3,13 +3,14 @@ import gates.And;
 import gates.*;
 import gates.Gate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 /**
  * Created by Kyle Ferguson on 6/2/15.
  */
-public class LogicBoard implements LogicBoardADT {
+public class LogicBoard implements LogicBoardADT, Serializable {
     static final String AND = "and";
     static final String NOT = "not";
     static final String OR = "or";

@@ -1,11 +1,12 @@
 package gates;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Kyle Ferguson on 5/31/2015.
  */
-public class BinarySwitch implements Gate
+public class BinarySwitch implements Gate, Serializable
 {
 
     private int output;
