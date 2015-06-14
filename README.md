@@ -1,4 +1,4 @@
-# LogicBoard
+# LogicBoard (open this file to view the truth table correctly.)
 This is a java console implementation of the LogicBoard project. 
 It's purpose is for proof of concept. 
 Once completed it will be implemented as an application using GUI. 
