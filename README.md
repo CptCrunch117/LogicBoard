@@ -11,7 +11,7 @@ Sample of Console
 Output of Driver3:
 
 A	B	C	D	E	F	|	(((A'+B)+CD)+E+F)'	
-0	0	0	0	0	0			0						
+0	0	0	0	0	0                       0						
 0	0	0	0	0	1			0						
 0	0	0	0	1	0			0						
 0	0	0	0	1	1			0						
