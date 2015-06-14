@@ -9,15 +9,22 @@ public class Driver3 {
 
     public static void main(String[] args){
 
+        //Mathematically:
+        //LogicBoard is a set of gate elements.
+        //A logicBoard set can also contain other LogicBoard sets.
+        //This allows for logic blocking, where a LogicBoard subset
+        //takes care of only a portion of the logic of the superset.
+
+
         //A logicBoard System is a system of logic gates that all share a commonality
-        //that commonality is a Systems inputs. These inputs are the center of a system.
-        //It tells the program how many possible inputs can be made, they also determine the systems output as well as
+        //that commonality is a System's inputs. These inputs are the center of a system.
+        //It tells the program how many possible inputs can be made, they also determine the system's output as well as
         //their values are whats changed by the generationTable or user.
 
 
         //Next Addon function (aka not yet implemented):
         //Once an output of a gate in the system is defined as the System's output, you can plug that into another system.
-        //Note: Binary switch will be made but its output will be based on the output of the system's output thats connected
+        //Note: Binary switch will be made but its output will be based on the output of the system's output that's connected
         //to it.
 
 
