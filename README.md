@@ -10,6 +10,7 @@ This is kind of a private project
 Sample of Console
 Console Output of OneBitFullAdder class:
 <table>
+<th>One bit full adder</th>
     <tr>
         <td>A</td>
         <td>B</td>
@@ -76,16 +77,6 @@ Console Output of OneBitFullAdder class:
         <td>1</td>
     </tr>
 </table>
-A	B	Cin	|	Cout	Sum
-0	0	0		0	0	
-0	0	1		0	1	
-0	1	0		0	1	
-0	1	1		1	0	
-1	0	0		0	1	
-1	0	1		1	0	
-1	1	0		1	0	
-1	1	1		1	1	
-
 Process finished with exit code 0
 
 As of now a clean up and error catching process is being done on the data structure.
