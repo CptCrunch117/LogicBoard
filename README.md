@@ -10,16 +10,6 @@ This is kind of a private project
 Sample of Console
 Console Output of OneBitFullAdder class:
 
------One Bit Full Adder-----
-A B Cin | Cout  Sum
-0 0 0     0     0
-0 0 1     0     1
-0 1 0     0     1
-0 1 1     1     0
-1 0 0     0     1
-1 0 1     1     0
-1 1 0     1     0
-1 1 1     1     1
 A	B	Cin	|	Cout	Sum	
 0	0	0		0	0	
 0	0	1		0	1	
