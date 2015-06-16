@@ -10,7 +10,7 @@ This is kind of a private project
 Sample of Console
 Console Output of OneBitFullAdder class:
 
-A	B	Cin	|	Cout	Sum\n
+A	B	Cin	|	Cout	Sum
 0	0	0		0	0	
 0	0	1		0	1	
 0	1	0		0	1	
