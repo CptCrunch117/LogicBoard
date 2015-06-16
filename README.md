@@ -9,7 +9,73 @@ This is kind of a private project
 
 Sample of Console
 Console Output of OneBitFullAdder class:
-
+<table>
+    <tr>
+        <td>A</td>
+        <td>B</td>
+        <td>Cin</td>
+        <td>|</td>
+        <td>Cout</td>
+        <td>Sum</td>
+    </tr>
+    <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>  </td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>  </td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>  </td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+        <td>  </td>
+        <td>1</td>
+        <td>0</td>
+    </tr>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>  </td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+        <td>  </td>
+        <td>1</td>
+        <td>0</td>
+    </tr>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>  </td>
+        <td>1</td>
+        <td>0</td>
+    </tr>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>  </td>
+        <td>1</td>
+        <td>1</td>
+    </tr>
+</table>
 A	B	Cin	|	Cout	Sum
 0	0	0		0	0	
 0	0	1		0	1	
