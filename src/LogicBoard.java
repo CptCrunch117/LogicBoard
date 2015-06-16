@@ -357,7 +357,7 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         }
 
 
-        Gate inputOne = null;
+        Gate inputOne;
         Gate inputTwo = null;
 
         if(gate.equalsIgnoreCase("and") || gate.equalsIgnoreCase("or")) {
@@ -374,8 +374,6 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         else{
             inputOne = getAvailableGate(input1_nameID);
         }
-
-
 
 
             if (gate.equalsIgnoreCase("And")) {
