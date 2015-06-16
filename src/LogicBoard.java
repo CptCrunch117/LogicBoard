@@ -15,32 +15,37 @@ public class LogicBoard implements LogicBoardADT, Serializable {
     static final String NOT = "not";
     static final String OR = "or";
 
+    private String logicBoardName;
     private ArrayList<Gate> logicBoard;             //Keeps track of System inputs
     private ArrayList<Gate> openInputs;             //Keeps track of gates with null inputs
     private ArrayList<Gate> openOutputs;            //Keeps track of gates with null OutputTo's
     private ArrayList<Gate> iods;                   //keeps track of open input only devices
     private ArrayList<Gate> allGates;       //List of all existing gates in logicboard object.
-
+    private ArrayList<Gate> sysOut;
+    private ArrayList<LogicBoard> blocks;
 
     public LogicBoard(){
-        logicBoard = new ArrayList<Gate>();
-        openOutputs = new ArrayList<Gate>();
-        openInputs = new ArrayList<Gate>();
+        this.logicBoard = new ArrayList<Gate>();
+        this.openOutputs = new ArrayList<Gate>();
+        this.openInputs = new ArrayList<Gate>();
         this.allGates = new ArrayList<Gate>();
-        iods = new ArrayList<Gate>();
-
+        this.iods = new ArrayList<Gate>();
+        this.sysOut = new ArrayList<Gate>();
+        this.blocks = new ArrayList<LogicBoard>();
         this.openOutputs = findOpenOutputs();
         updateIODList();
     }
 
 
-    public LogicBoard(String[] inputIDs){
+    public LogicBoard(String[] inputIDs, String logicBoardName){
+        this.logicBoardName = logicBoardName;
         this.logicBoard = new ArrayList<Gate>();
         this.allGates = new ArrayList<Gate>();
-        openOutputs = new ArrayList<Gate>();
-        openInputs = new ArrayList<Gate>();
+        this.openOutputs = new ArrayList<Gate>();
+        this.openInputs = new ArrayList<Gate>();
         this.allGates = new ArrayList<Gate>();
-        iods = new ArrayList<Gate>();
+        this.iods = new ArrayList<Gate>();
+        this.sysOut = new ArrayList<Gate>();
 
         for(int i=0; i < inputIDs.length; i++){
             BinarySwitch bSwitch = new BinarySwitch(inputIDs[i]);
@@ -51,7 +56,8 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         updateIODList();
     }
 
-    @Override
+
+    /*@Override
     public Gate findGate(String nameID){
         //CircuitBoard list only hold the circuits inputs
         //if input outputTo is null, add the switch to the available openOutputs list
@@ -79,9 +85,9 @@ public class LogicBoard implements LogicBoardADT, Serializable {
             }
         }//END DATA LOOP
         return found;
-    }//END OF openOuputs METHOD
+    }//END OF openOuputs METHOD*/
 
-    @Override
+    /*@Override
     public ArrayList<Gate> findOpenOutputs(){
         ArrayList<Gate> openOuputGates = new ArrayList<Gate>();
         //CircuitBoard list only hold the circuits inputs
@@ -96,7 +102,9 @@ public class LogicBoard implements LogicBoardADT, Serializable {
             else{
                 Gate gate = switches.getOutputTo();
                 while(gate != null){
-                    if( (gate.getOutputTo() == null && !gate.getDeviceType().equalsIgnoreCase("IOD")) || gate.getGateType().equalsIgnoreCase("Ghost") ) {
+                    //Last condition with the 2 &&'s is expiremental!!!!!!!!!!!!!!
+                    if( (gate.getOutputTo() == null && !gate.getDeviceType().equalsIgnoreCase("IOD")) || gate.getGateType().equalsIgnoreCase("Ghost")
+                    || (gate.getDeviceType().equalsIgnoreCase("OOD") && gate.getInput1From() != null && gate.getOutputTo() == null )) {
                         boolean trulyAva = false;
                         if(!openOuputGates.isEmpty()) {
                             for (Gate open : openOuputGates) {
@@ -120,7 +128,120 @@ public class LogicBoard implements LogicBoardADT, Serializable {
             }
         }//END DATA LOOP
         return openOuputGates;
-    }//END OF openOuputs METHOD
+    }//END OF openOuputs METHOD*/
+
+
+
+    @Override
+    public ArrayList<Gate> findOpenOutputs() {
+        ArrayList<Gate> find = new ArrayList<Gate>();
+
+
+        for(Gate g : this.logicBoard){
+           if(g.getOutputTo().isEmpty()){
+               if(!find.contains(g)){
+                   find.add(g);
+               }
+           }
+            else {
+               seeker(g, find);
+           }
+        }
+
+
+        return find;
+    }
+
+    private void seeker(Gate g, ArrayList<Gate> find){
+        ArrayList<Gate> temp = new ArrayList<Gate>();
+
+
+        //Base case-2
+        if(g.getOutputTo().isEmpty()){
+            if(!find.contains(g)){
+                find.add(g);
+            }
+            return;
+        }
+        else{
+            for(Gate gate : g.getOutputTo()){
+                if(gate != null) {
+                    temp.add(gate);
+                }
+            }
+            for(Gate gate : temp){
+                seeker(gate, find);
+            }
+        }
+        return;
+    }
+
+    private Gate retriever(Gate find, String gateID){
+        ArrayList<Gate> temp = new ArrayList<Gate>();
+        Gate found = null;
+
+
+        if(find.getOutputTo().isEmpty() || find.getOutputTo() == null){
+            return null;
+        }
+
+        //Base case-2
+        if (find.getGateID().equalsIgnoreCase(gateID)){
+                found = find;
+        }
+        else{
+            for(Gate gate : find.getOutputTo()){
+                temp.add(gate);
+            }
+            for(Gate gate : temp){
+                retriever(gate, gateID);
+            }
+        }
+
+
+        return found;
+    }
+    public Gate findGate(String gateID){
+        Gate found = null;
+        boolean isFound = false;
+
+        //First check if gate is binary switch
+        for(int i=0; i < this.logicBoard.size(); i++){
+            if(this.logicBoard.get(i).getGateID().equalsIgnoreCase(gateID)){
+                found = this.logicBoard.get(i);
+                isFound = true;
+                break;
+            }
+        }
+        //if not switch gate found should be null and isFound should be false.
+        //
+        if(!isFound){
+            for(int i=0; i < this.logicBoard.size(); i++) {
+
+                found = retriever(this.logicBoard.get(i), gateID);
+                if(found != null){
+                    break;
+                }
+
+            }
+        }
+
+
+
+        return found;
+    }
+
+    public Gate getAvailableGate(String gateID){
+        Gate found = null;
+        for(int i=0; i < this.allGates.size(); i++){
+            if(this.allGates.get(i).getGateID().equalsIgnoreCase(gateID)){
+                found = this.allGates.get(i);
+                break;
+            }
+        }
+
+        return found;
+    }
 
     /**
      * This method updates the list of Input Only Devices
@@ -225,7 +346,9 @@ public class LogicBoard implements LogicBoardADT, Serializable {
 }
 
     @Override
-    public void addGate(String gate, String gateID, String input1_nameID, String input2_nameID) {
+    public void addGate(String gate, String gateID, String input1_nameID, String input2_nameID, int in1_in, int in2_in) {
+
+
 
         for(Gate g : this.allGates){
             if(g.getGateID().equalsIgnoreCase(gateID)){
@@ -233,28 +356,45 @@ public class LogicBoard implements LogicBoardADT, Serializable {
             }
         }
 
-        Gate inputOne = findAvGate(input1_nameID);
-        Gate inputTwo = findAvGate(input2_nameID);
+
+        Gate inputOne = null;
+        Gate inputTwo = null;
+
+        if(gate.equalsIgnoreCase("and") || gate.equalsIgnoreCase("or")) {
+            inputOne = getAvailableGate(input1_nameID);
+            inputTwo = getAvailableGate(input2_nameID);
+        }/*
+        else if(this.blocks.contains(input1_nameID)){
+                for(int i=0; i<this.blocks.size();i++){
+                    if(blocks.get(i).logicBoardName.equalsIgnoreCase(input1_nameID)){
+                        inputOne = blocks.get(i).sysOut.get(i);
+                    }
+                }
+            }*/
+        else{
+            inputOne = getAvailableGate(input1_nameID);
+        }
+
 
 
 
             if (gate.equalsIgnoreCase("And")) {
                 if(inputOne.getGateType().equalsIgnoreCase("ghost") || inputTwo.getGateType().equalsIgnoreCase("ghost")){
-                    replaceGhost("and", gateID, input1_nameID, input2_nameID);
+                    replaceGhost("and", gateID, input1_nameID, input2_nameID, in1_in, in2_in);
                 }else {
                     createGate("and", gateID, inputOne, inputTwo);
                 }
             }
             else if (gate.equalsIgnoreCase("Or")) {
                 if(inputOne.getGateType().equalsIgnoreCase("ghost") || inputTwo.getGateType().equalsIgnoreCase("ghost")){
-                    replaceGhost("or", gateID, input1_nameID, input2_nameID);
+                    replaceGhost("or", gateID, input1_nameID, input2_nameID, in1_in, in2_in);
                 }else {
                     createGate("or", gateID, inputOne, inputTwo);
                 }
             }
             else if (gate.equalsIgnoreCase("Not")) {
                 if(inputOne.getGateType().equalsIgnoreCase("ghost")){
-                    replaceGhost("not", gateID, input1_nameID, input2_nameID);
+                    replaceGhost("not", gateID, input1_nameID, input2_nameID, in1_in, in2_in);
 
                 }else {
                     createGate("not", gateID, inputOne, null);
@@ -270,11 +410,8 @@ public class LogicBoard implements LogicBoardADT, Serializable {
 
 
 
-
-
         //Update openOuput list after adding
         this.openOutputs = findOpenOutputs();
-
         updateIODList();
     }
 
@@ -408,7 +545,6 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         }
 
 
-
         return table;
     }
 
@@ -418,67 +554,126 @@ public class LogicBoard implements LogicBoardADT, Serializable {
 
 
         if(remove.getGateType().equalsIgnoreCase("AND") || remove.getGateType().equalsIgnoreCase("OR")){
-
-            Ghost ghost1 = new Ghost(remove.getInput1From(), remove.getOutputTo(), "GhostOf_"+remove.getGateID()+"_input1");
-            Ghost ghost2 = new Ghost(remove.getInput2From(), remove.getOutputTo(), "GhostOf_"+remove.getGateID()+"_input2");
+            for(int i=0; i < remove.getOutputTo().size(); i++){
+            Ghost ghost1 = new Ghost(remove.getOutputTo().get(i).getInput1From(),remove.getOutputTo().get(i).getInput2From(), remove.getOutputTo().get(i), "GhostOf_"+remove.getGateID()+"_input"+i);
             if(remove.getOutputTo() != null){
-                if(remove.getOutputTo().getInput1From() != null) {
-                    if (remove.getOutputTo().getInput1From().getGateID().equalsIgnoreCase(remove.getGateID())) {
-                        remove.getOutputTo().setInput1From(ghost1);
-                        remove.getOutputTo().setInput1From(ghost2);
-                    }
-                    else if(remove.getOutputTo().getInput2From() != null){
-                        if(remove.getOutputTo().getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())){
-                            remove.getOutputTo().setInput2From(ghost1);
-                            remove.getOutputTo().setInput2From(ghost2);
+                if(remove.getOutputTo().get(i).getInput1From() != null) {
+                    if (remove.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(remove.getGateID())) {
+                        remove.getOutputTo().get(i).setInput1From(ghost1);
+                    } else if (remove.getOutputTo().get(i).getInput2From() != null) {
+                        if (remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())) {
+                            remove.getOutputTo().get(i).setInput2From(ghost1);
                         }
                     }
                 }
-                else if(remove.getOutputTo().getInput2From() != null){
-                    if(remove.getOutputTo().getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())){
-                        remove.getOutputTo().setInput2From(ghost1);
-                        remove.getOutputTo().setInput2From(ghost2);
+                }
+                else if(remove.getOutputTo().get(i).getInput2From() != null){
+                    if(remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())){
+                        remove.getOutputTo().get(i).setInput2From(ghost1);
                     }
                 }
+                allGates.add(ghost1);
             }
             allGates.remove(remove);
-            allGates.add(ghost1);
-            allGates.add(ghost2);
             remove.remove();
         }
         else if(remove.getGateType().equalsIgnoreCase("NOT")){
-            Ghost ghost = new Ghost(remove.getInput1From(), remove.getOutputTo(), "GhostOf_"+remove.getGateID()+"_input1");
-            if(remove.getOutputTo() != null){
-                if(remove.getOutputTo().getInput1From() != null) {
-                    if (remove.getOutputTo().getInput1From().getGateID().equalsIgnoreCase(remove.getGateID())) {
-                        remove.getOutputTo().setInput1From(ghost);
-                    }
-                    else if(remove.getOutputTo().getInput2From() != null){
-                        if(remove.getOutputTo().getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())){
-                            remove.getOutputTo().setInput2From(ghost);
+
+            for(int i=0; i < remove.getOutputTo().size(); i++) {
+
+                Ghost ghost = new Ghost(remove.getOutputTo().get(i).getInput1From(), remove.getOutputTo().get(i), "GhostOf_" + remove.getGateID() + "_input"+i);
+                if (remove.getOutputTo() != null) {
+                    if (remove.getOutputTo().get(i).getInput1From() != null) {
+                        if (remove.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(remove.getGateID())) {
+                            remove.getOutputTo().get(i).setInput1From(ghost);
+                        } else if (remove.getOutputTo().get(i).getInput2From() != null) {
+                            if (remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())) {
+                                remove.getOutputTo().get(i).setInput2From(ghost);
+                            }
+                        }
+                    } else if (remove.getOutputTo().get(i).getInput2From() != null) {
+                        if (remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())) {
+                            remove.getOutputTo().get(i).setInput2From(ghost);
                         }
                     }
                 }
-                else if(remove.getOutputTo().getInput2From() != null){
-                    if(remove.getOutputTo().getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())){
-                        remove.getOutputTo().setInput2From(ghost);
-                    }
-                }
+                allGates.add(ghost);
             }
 
             allGates.remove(remove);
-            allGates.add(ghost);
-
             remove.remove();
         }
         this.openOutputs = findOpenOutputs();
 
     }
 
+    @Override
+    public void setSystemOutputs(ArrayList<String> gateIDs) {
+        for(String s : gateIDs){
+            Gate gate = findGate(s);
+            this.sysOut.add(gate);
+        }
+    }
 
-    public void replaceGhost(String gate, String gateID, String input1_nameID, String input2_nameID){
-        Gate input1 = findAvGate(input1_nameID);
-        Gate input2 = findAvGate(input2_nameID);
+    @Override
+    public ArrayList<Gate> getSystemOutputs() {
+        return this.sysOut;
+    }
+
+    @Override
+    public void insertLogicBlock(ArrayList<String> gateIN, LogicBoard block) {
+        //temp arrayList to hold all found open input gates
+        ArrayList<Gate> outputs = new ArrayList<Gate>();
+
+        //Iterate over all gateIds passed in and add to temp arrayList
+        for(String gateID: gateIN) {
+            //find gate matching id passed in
+            Gate gate = getAvailableGate(gateID);
+            //If gate not found throw no SuchGateException
+            if(gate == null){
+                throw new NoSuchGateException(gateID);
+            }
+            //Otherwise if found add gate to temp ArrayList.
+            else{
+                outputs.add(gate);
+            }
+        }//End of gateID searching...
+
+        //if the outputs list size is equal to the input switch size of the logic block
+        //A "Connection" is established and linking of outputs to logic block can begin!
+        if(outputs.size() == block.logicBoard.size()){
+            //System.out.println("Connection Made...");
+            int index = 0;
+            //the gateIn should arrange the order from MSB to LSB to match desired connections
+            //EX:
+            //
+            //     3       2       1        0 <- Digit-place
+            //     A       B       C        D  <-inputs of block being inserted
+            //     G0      G1      G2       G3 <-in order of index of gateID ArrayList from parameter {G0, G1, G2, G3}
+
+
+            for(Gate g : outputs){
+                //connect the corresponding outputs to binary switch (binary switch will now simply pass on the value of gate connected to it!)
+                System.out.println(block.logicBoard.get(index).getGateID());
+                System.out.println(block.logicBoard.get(index).getInput1From());
+                block.logicBoard.get(index).setInput1From(g);
+                System.out.println(block.logicBoard.get(index).getInput1From().getGateID());
+                //System.out.println(g.get(index).getInput1From().getGateID());
+
+            }
+            //Update openOuput list after adding
+            this.openOutputs = findOpenOutputs();
+        }
+
+
+
+    }
+
+
+    public void replaceGhost(String gate, String gateID, String input1_nameID, String input2_nameID, int in1_in, int in2_in){
+
+        Gate input1 = findGate(input1_nameID);
+        Gate input2 = findGate(input2_nameID);
 
         if(gate.equalsIgnoreCase("and")){
 
@@ -489,17 +684,36 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 //  Find input2 gate, since not equal to ghost search for it in available outputs list
                 //  check if input1 ghost has sibling ghost(another ghost pointing to same gate)
                 //if so, delete the sibling ghost.
-                And and = new And(input1.getInput1From(),input2, gateID);
+                And and = null;
+                if(in1_in == 0) {
+                    and = new And(input1.getInput1From(), input2, gateID);
+                }
+                else if(in1_in == 1) {
+                    if(input1.getInput2From() != null) {
+                        and = new And(input1.getInput2From(), input2, gateID);
+                    }
+                    else{
+                        and = new And(input1.getInput1From(), input2, gateID);
+                    }
+                }
                 this.allGates.add(and);
 
-                //Find sibling ghost(if exists) and remove it
+                /*//Find sibling ghost(if exists) and remove it
                 if(input1.getOutputTo() != null) {
 
                     Gate siblingGhost = null;
                     for (Gate g : this.allGates) {
                         if (g.getGateType().equalsIgnoreCase("ghost")) {
-                            if (g.getOutputTo().getGateID().equalsIgnoreCase(input1.getOutputTo().getGateID())) {
-                                siblingGhost = g;
+                            for(int i=0; i < g.getOutputTo().size(); i++) {
+                               boolean valid = false;
+                                for(int j=0; j < input1.getOutputTo().size(); j++) {
+                                    if (g.getOutputTo().get(i).getGateID().equalsIgnoreCase(input1.getOutputTo().get(j).getGateID())) {
+                                        siblingGhost = g;
+                                        valid = true;
+                                        break;
+                                    }
+                                }
+                                if(valid){break;}
                             }
                         }
                     }
@@ -508,14 +722,18 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                         siblingGhost.remove();
                     }
                 }
-                //----------
-                if(input1.getOutputTo() != null){
-                    if(input1.getOutputTo().getInput1From().getGateType().equalsIgnoreCase("ghost")){
-                        input1.getOutputTo().setInput1From(and);
+                //----------*/
+                if (input1.getOutputTo() != null) {
+                    for (int i = 0; i < input1.getOutputTo().size(); i++) {
+
+                        if (input1.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input1.getOutputTo().get(i).setInput1From(and);
+                        } else if (input1.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input1.getOutputTo().get(i).setInput2From(and);
+                        }
+
                     }
-                    else if(input1.getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                        input1.getOutputTo().setInput2From(and);
-                    }
+
                 }
                 allGates.remove(input1);
                 input1.remove();
@@ -528,17 +746,36 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 //  Find input1 gate, since not equal to ghost search for it in available outputs list
                 //  check if input2 ghost has sibling ghost(another ghost pointing to same gate)
                 //if so, delete the sibling ghost.
-                And and = new And(input1,input2.getInput1From(), gateID);
+                And and = null;
+                if(in2_in == 0) {
+                    and = new And(input1, input2.getInput1From(), gateID);
+                }
+                else if(in2_in == 1) {
+                    if(input2.getInput2From() != null) {
+                        and = new And(input1, input2.getInput2From(), gateID);
+                    }
+                    else{
+                        and = new And(input1, input2.getInput1From(), gateID);
+                    }
+                }
                 this.allGates.add(and);
 
-                //Find sibling ghost(if exists) and remove it
-                if(input2.getOutputTo() != null) {
+                /*//Find sibling ghost(if exists) and remove it
+                if(input1.getOutputTo() != null) {
 
                     Gate siblingGhost = null;
                     for (Gate g : this.allGates) {
                         if (g.getGateType().equalsIgnoreCase("ghost")) {
-                            if (g.getOutputTo().getGateID().equalsIgnoreCase(input2.getOutputTo().getGateID())) {
-                                siblingGhost = g;
+                            for(int i=0; i < g.getOutputTo().size(); i++) {
+                               boolean valid = false;
+                                for(int j=0; j < input1.getOutputTo().size(); j++) {
+                                    if (g.getOutputTo().get(i).getGateID().equalsIgnoreCase(input1.getOutputTo().get(j).getGateID())) {
+                                        siblingGhost = g;
+                                        valid = true;
+                                        break;
+                                    }
+                                }
+                                if(valid){break;}
                             }
                         }
                     }
@@ -547,19 +784,22 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                         siblingGhost.remove();
                     }
                 }
-                //----------
-                if(input2.getOutputTo() != null){
-                    if(input1.getOutputTo().getInput1From().getGateType().equalsIgnoreCase("ghost")){
-                        input1.getOutputTo().setInput1From(and);
+                //----------*/
+                if (input2.getOutputTo() != null) {
+                    for (int i = 0; i < input2.getOutputTo().size(); i++) {//should be only size 1
+
+                        if (input2.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input2.getOutputTo().get(i).setInput1From(and);
+                        } else if (input2.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input2.getOutputTo().get(i).setInput2From(and);
+                        }
+
                     }
-                    else if(input1.getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                        input1.getOutputTo().setInput2From(and);
-                    }
+
                 }
                 allGates.remove(input2);
-                input2.remove();
+                input1.remove();
                 and.evaluateGate();
-
             }
 
 
@@ -569,16 +809,31 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 // then replace input2From on new gate with input2's input1From
                 // if outputTo is not equal to null set new gates outputTo using the outputTo pointer from ONE
                 //of the ghost siblings.
-                if (input1.getOutputTo().getGateID().equalsIgnoreCase(input2.getOutputTo().getGateID())) {
+                And and = null;
 
-                    And and = new And(input1.getInput1From(), input2.getInput1From(), gateID);
+                for(int i=0; i < input1.getOutputTo().size(); i++){//should only be size one
+                    if (input1.getOutputTo().get(i).getGateID().equalsIgnoreCase(input2.getOutputTo().get(i).getGateID())) {
+                        Gate in1 = null;
+                        Gate in2 = null;
+
+                        if(in1_in == 0) {in1 = input1.getInput1From();}
+                        else if(in1_in == 1){in1 = input1.getInput2From();}
+
+                        if(in2_in == 0){in2 = input2.getInput1From();}
+                        else if(in2_in == 1){in2 = input2.getInput2From();}
+
+                        if(in1 != null && in2 != null) {
+                            and = new And(in1, in2, gateID);
+                        }
+
+                    }
 
                     if (input1.getOutputTo() != null) {
-                        if(input1.getOutputTo().getInput1From().getGateType().equalsIgnoreCase("ghost")){
-                            input1.getOutputTo().setInput1From(and);
+                        if(input1.getOutputTo().get(i).getInput1From().getGateType().equalsIgnoreCase("ghost")){
+                            input1.getOutputTo().get(i).setInput1From(and);
                         }
                         else if(input1.getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                            input1.getOutputTo().setInput2From(and);
+                            input1.getOutputTo().get(i).setInput2From(and);
                         }
                     }
 
@@ -605,16 +860,36 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 //  check if input1 ghost has sibling ghost(another ghost pointing to same gate)
                 //if so, delete the sibling ghost.
                 //if so, delete the sibling ghost.
-                Or or = new Or(input1.getInput1From(),input2, gateID);
+                Or or = null;
+                if(in1_in == 0) {
+                    or = new Or(input1.getInput1From(), input2, gateID);
+                }
+                else if(in1_in == 1) {
+                    if(input1.getInput2From() != null) {
+                        or = new Or(input1.getInput2From(), input2, gateID);
+                    }
+                    else{
+                        or = new Or(input1.getInput1From(), input2, gateID);
+                    }
+                }
                 this.allGates.add(or);
 
-                //Find sibling ghost(if exists) and remove it
-                if (input1.getOutputTo() != null) {
+                /*//Find sibling ghost(if exists) and remove it
+                if(input1.getOutputTo() != null) {
+
                     Gate siblingGhost = null;
                     for (Gate g : this.allGates) {
                         if (g.getGateType().equalsIgnoreCase("ghost")) {
-                            if (g.getOutputTo().getGateID().equalsIgnoreCase(input1.getOutputTo().getGateID())) {
-                                siblingGhost = g;
+                            for(int i=0; i < g.getOutputTo().size(); i++) {
+                               boolean valid = false;
+                                for(int j=0; j < input1.getOutputTo().size(); j++) {
+                                    if (g.getOutputTo().get(i).getGateID().equalsIgnoreCase(input1.getOutputTo().get(j).getGateID())) {
+                                        siblingGhost = g;
+                                        valid = true;
+                                        break;
+                                    }
+                                }
+                                if(valid){break;}
                             }
                         }
                     }
@@ -623,22 +898,16 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                         siblingGhost.remove();
                     }
                 }
-                //----------
-                if(input1.getOutputTo() != null){
-                    if(input1.getOutputTo().getInput1From() != null) {
-                        if (input1.getOutputTo().getInput1From().getGateType().equalsIgnoreCase("ghost")) {
-                            input1.getOutputTo().setInput1From(or);
+                //----------*/
+                if (input1.getOutputTo() != null) {
+                    for (int i = 0; i < input1.getOutputTo().size(); i++) {
+
+                        if (input1.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input1.getOutputTo().get(i).setInput1From(or);
+                        } else if (input1.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input1.getOutputTo().get(i).setInput2From(or);
                         }
-                        else if(input1.getOutputTo().getInput2From() != null){
-                            if(input1.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                                input1.getOutputTo().setInput2From(or);
-                            }
-                        }
-                    }
-                    else if(input2.getOutputTo().getInput2From() != null){
-                        if(input1.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                            input1.getOutputTo().setInput2From(or);
-                        }
+
                     }
 
                 }
@@ -653,17 +922,36 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 //  Find input1 gate, since not equal to ghost search for it in available outputs list
                 //  check if input2 ghost has sibling ghost(another ghost pointing to same gate)
                 //if so, delete the sibling ghost.
-                Or or = new Or(input1,input2.getInput1From(), gateID);
+                Or or= null;
+                if(in2_in == 0) {
+                    or = new Or(input1, input2.getInput1From(), gateID);
+                }
+                else if(in2_in == 1) {
+                    if(input2.getInput2From() != null) {
+                        or = new Or(input1, input2.getInput2From(), gateID);
+                    }
+                    else{
+                        or = new Or(input1, input2.getInput1From(), gateID);
+                    }
+                }
                 this.allGates.add(or);
 
-                //Find sibling ghost(if exists) and remove it
+                /*//Find sibling ghost(if exists) and remove it
                 if(input1.getOutputTo() != null) {
 
                     Gate siblingGhost = null;
                     for (Gate g : this.allGates) {
                         if (g.getGateType().equalsIgnoreCase("ghost")) {
-                            if (g.getOutputTo().getGateID().equalsIgnoreCase(input2.getOutputTo().getGateID())) {
-                                siblingGhost = g;
+                            for(int i=0; i < g.getOutputTo().size(); i++) {
+                               boolean valid = false;
+                                for(int j=0; j < input1.getOutputTo().size(); j++) {
+                                    if (g.getOutputTo().get(i).getGateID().equalsIgnoreCase(input1.getOutputTo().get(j).getGateID())) {
+                                        siblingGhost = g;
+                                        valid = true;
+                                        break;
+                                    }
+                                }
+                                if(valid){break;}
                             }
                         }
                     }
@@ -672,55 +960,59 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                         siblingGhost.remove();
                     }
                 }
-                //----------
-                if(input2.getOutputTo() != null){
-                    if(input2.getOutputTo().getInput1From() != null) {
-                        if (input2.getOutputTo().getInput1From().getGateType().equalsIgnoreCase("ghost")) {
-                            input2.getOutputTo().setInput1From(or);
+                //----------*/
+                if (input2.getOutputTo() != null) {
+                    for (int i = 0; i < input2.getOutputTo().size(); i++) {//should be only size 1
+
+                        if (input2.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input2.getOutputTo().get(i).setInput1From(or);
+                        } else if (input2.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                            input2.getOutputTo().get(i).setInput2From(or);
                         }
-                        else if(input2.getOutputTo().getInput2From() != null){
-                            if(input2.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                                input2.getOutputTo().setInput2From(or);
-                            }
-                        }
+
                     }
-                    else if(input2.getOutputTo().getInput2From() != null){
-                        if(input2.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                            input2.getOutputTo().setInput2From(or);
-                        }
-                    }
+
                 }
                 allGates.remove(input2);
-                input2.remove();
+                input1.remove();
                 or.evaluateGate();
             }
             else if(input1.getGateType().equalsIgnoreCase("ghost") && input2.getGateType().equalsIgnoreCase("ghost")) {
-                Or or = new Or(input1.getInput1From(), input2.getInput1From(), gateID);
+                Or or = null;
 
-                if (input1.getOutputTo() != null) {
-                    if(input1.getOutputTo().getInput1From() != null) {
-                        if (input1.getOutputTo().getInput1From().getGateType().equalsIgnoreCase("ghost")) {
-                            input1.getOutputTo().setInput1From(or);
+                for(int i=0; i < input1.getOutputTo().size(); i++){//should only be size one
+                    if (input1.getOutputTo().get(i).getGateID().equalsIgnoreCase(input2.getOutputTo().get(i).getGateID())) {
+                        Gate in1 = null;
+                        Gate in2 = null;
+
+                        if(in1_in == 0) {in1 = input1.getInput1From();}
+                        else if(in1_in == 1){in1 = input1.getInput2From();}
+
+                        if(in2_in == 0){in2 = input2.getInput1From();}
+                        else if(in2_in == 1){in2 = input2.getInput2From();}
+
+                        if(in1 != null && in2 != null) {
+                            or = new Or(in1, in2, gateID);
                         }
-                        else if(input1.getOutputTo().getInput2From() != null){
-                            if(input1.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                                input1.getOutputTo().setInput2From(or);
-                            }
+
+                    }
+
+                    if (input1.getOutputTo() != null) {
+                        if(input1.getOutputTo().get(i).getInput1From().getGateType().equalsIgnoreCase("ghost")){
+                            input1.getOutputTo().get(i).setInput1From(or);
+                        }
+                        else if(input1.getInput2From().getGateType().equalsIgnoreCase("ghost")){
+                            input1.getOutputTo().get(i).setInput2From(or);
                         }
                     }
-                    else if(input2.getOutputTo().getInput2From() != null){
-                        if(input1.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                            input1.getOutputTo().setInput2From(or);
-                        }
-                    }
+
+                    allGates.add(or);
+                    allGates.remove(input1);
+                    allGates.remove(input2);
+                    input1.remove();
+                    input2.remove();
+                    or.evaluateGate();
                 }
-
-                allGates.add(or);
-                allGates.remove(input1);
-                allGates.remove(input2);
-                input1.remove();
-                input2.remove();
-                or.evaluateGate();
             }
             else{
                 //input1 != ghost and input2 != ghost
@@ -736,10 +1028,21 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 //  check if input1 ghost has sibling ghost(another ghost pointing to same gate)
                 //if so, delete the sibling ghost.
                 //if so, delete the sibling ghost.
-                Not not = new Not(input1.getInput1From(), gateID);
+                Not not = null;
+                if(in1_in == 0) {
+                   not = new Not(input1.getInput1From(), gateID);
+                }
+                else if(in1_in == 1) {
+                    if(input1.getInput2From() != null) {
+                        not = new Not(input1.getInput2From(), gateID);
+                    }
+                    else{
+                        not = new Not(input1.getInput1From(), gateID);
+                    }
+                }
                 this.allGates.add(not);
 
-                //Find sibling ghost(if exists) and remove it
+                /*//Find sibling ghost(if exists) and remove it
                 if(input1.getOutputTo() != null) {
                     Gate siblingGhost = null;
                     for (Gate g : this.allGates) {
@@ -754,23 +1057,27 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                         siblingGhost.remove();
                     }
                 }
-                //----------
+                //----------*/
+
+
                 if(input1.getOutputTo() != null){
-                    if(input1.getOutputTo().getInput1From() != null) {
-                        if (input1.getOutputTo().getInput1From().getGateType().equalsIgnoreCase("ghost")) {
-                            input1.getOutputTo().setInput1From(not);
-                        }
-                        else if(input1.getOutputTo().getInput2From() != null){
-                            if(input1.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                                input1.getOutputTo().setInput2From(not);
+                    for (int i = 0; i < input1.getOutputTo().size(); i++) {//should be only size 1
+
+                        if (input1.getOutputTo().get(i).getInput1From() != null) {
+                            if (input1.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                                input1.getOutputTo().get(i).setInput1From(not);
+                            } else if (input1.getOutputTo().get(i).getInput2From() != null) {
+                                if (input1.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(input1.getGateID())) {
+                                    input1.getOutputTo().get(i).setInput2From(not);
+                                }
+                            }
+                        } else if (input2.getOutputTo().get(i).getInput2From() != null) {
+                            if (input2.getOutputTo().get(i).getInput2From().getGateType().equalsIgnoreCase("ghost")) {
+                                input1.getOutputTo().get(i).setInput2From(not);
                             }
                         }
                     }
-                    else if(input2.getOutputTo().getInput2From() != null){
-                        if(input1.getOutputTo().getInput2From().getGateType().equalsIgnoreCase("ghost")){
-                            input1.getOutputTo().setInput2From(not);
-                        }
-                    }                }
+                }
                 allGates.remove(input1);
                 input1.remove();
                 not.evaluateGate();
@@ -853,8 +1160,12 @@ public class LogicBoard implements LogicBoardADT, Serializable {
             System.out.println("Gate "+g.getGateID()+": ");
             if(g.getInput1From() != null){System.out.println("\tinput1: "+g.getInput1From().getGateID());}
             if(g.getInput2From() != null){System.out.println("\tinput2: "+g.getInput2From().getGateID());}
-            if(g.getOutputTo() != null){System.out.println("\toutputTo: "+g.getOutputTo().getGateID());}
-            System.out.println();
+            if(!g.getOutputTo().isEmpty()) {
+                for (int i = 0; i < g.getOutputTo().size(); i++) {
+                    System.out.println("\toutputTo: " + g.getOutputTo().get(i).getGateID());
+                    System.out.println();
+                }
+            }
         }
         System.out.println("------------------------------------------------");
     }
@@ -865,4 +1176,6 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         }
 
     }
+
+
 }

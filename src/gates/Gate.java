@@ -1,6 +1,6 @@
 package gates;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Kyle Ferguson on 5/10/2015.
@@ -17,7 +17,7 @@ public interface Gate {
      * This method returns a pointer to the gate object that this gate outputs to.
      * @return a pointer of the gate object this gate outputs to.
      */
-    Gate getOutputTo();
+    ArrayList<Gate> getOutputTo();
 
     /**
      * This method sets/connects the "output" of this gate to the gate passed into the parameters.
@@ -109,4 +109,8 @@ public interface Gate {
      * garbage collector will take care of it.
      */
     void remove();
+
+    Gate getOutputTo(String gateID);
+
+    void removeOutputTo(String gateID);
 }

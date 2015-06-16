@@ -1,6 +1,9 @@
 package gates;
 
+import Exceptions.NoSuchGateException;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Kyle Ferguson on 5/31/2015.
@@ -9,7 +12,7 @@ public class Or implements Gate, Serializable {
 
 
     private int output;
-    private Gate outputTo;
+    private ArrayList<Gate> outputTos;
     private Gate input1From;
     private Gate input2From;
     private String nameID;
@@ -21,16 +24,16 @@ public class Or implements Gate, Serializable {
      * @param input2From
      */
     public Or(Gate input1From, Gate input2From){
+        this.outputTos = new ArrayList<Gate>();
         setGateID(null);
-        setOutputTo(null);
         setInput1From(input1From);
         setInput2From(input2From);
         evaluateGate();
     }
 
     public Or(Gate input1From, Gate input2From, String nameID){
+        this.outputTos = new ArrayList<Gate>();
         setGateID(nameID);
-        setOutputTo(null);
         setInput1From(input1From);
         setInput2From(input2From);
         evaluateGate();
@@ -39,16 +42,16 @@ public class Or implements Gate, Serializable {
      * No-Args constructor, when an AND gate is created with  no inputs.
      */
     public Or(){
+        this.outputTos = new ArrayList<Gate>();
         setGateID(null);
-        setOutputTo(null);
         setInput1From(null);
         setInput2From(null);
         evaluateGate();
     }
 
     public Or(String nameID){
+        this.outputTos = new ArrayList<Gate>();
         setGateID(nameID);
-        setOutputTo(null);
         setInput1From(null);
         setInput2From(null);
         evaluateGate();
@@ -120,11 +123,11 @@ public class Or implements Gate, Serializable {
     }
 
     @Override
-    public Gate getOutputTo() {
-        return outputTo;
+    public ArrayList<Gate> getOutputTo() {
+        return this.outputTos;
     }
     public void setOutputTo(Gate outputTo) {
-        this.outputTo = outputTo;
+        this.outputTos.add(outputTo);
     }
 
     public Gate getInput1From() {
@@ -144,8 +147,36 @@ public class Or implements Gate, Serializable {
     }
 
     public void remove(){
-        this.outputTo = null;
+        this.outputTos = null;
         this.input1From = null;
         this.input2From = null;
+    }
+
+    @Override
+    public Gate getOutputTo(String gateID) {
+        Gate found = null;
+        for(int i=0; i < getOutputTo().size(); i++){
+            if(getOutputTo().get(i).getGateID().equalsIgnoreCase(gateID)){
+                found = getOutputTo().get(i);
+            }
+        }
+
+        return found;
+    }
+
+    @Override
+    public void removeOutputTo(String gateID) {
+        Gate found = null;
+        for(Gate g : this.getOutputTo()){
+            if(g.getGateID().equalsIgnoreCase(gateID)){
+                found = g;
+            }
+        }
+        if(found == null){
+            throw new NoSuchGateException(gateID);
+        }
+        else{
+            this.getOutputTo().remove(found);
+        }
     }
 }

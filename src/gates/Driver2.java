@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class Driver2 {
 
-
+/*
     public static void main(String[] agrs){
         Driver2 drive = new Driver2();
         Scanner scan = new Scanner(System.in);
@@ -107,7 +107,7 @@ public class Driver2 {
 
         drive.fourInputTester(switches);
 
-/*
+
         int sentinelPlayCircuit = 1;
         do{
             System.out.println("Choose an OOD to change:\n");
@@ -152,7 +152,7 @@ public class Driver2 {
             sentinelPlayCircuit = (input.equalsIgnoreCase("y")) ? 1 : 0;
 
         }while(sentinelPlayCircuit == 1);
-*/
+
 
     }//END OF MAIN METHOD
 
@@ -452,5 +452,5 @@ public class Driver2 {
         }
 
     }//END OF FOURINPUTTESTER METHOD
-
+*/
 }//END OF CLASS DEFINITION

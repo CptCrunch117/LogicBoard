@@ -32,17 +32,17 @@ public class Driver3 {
         //To create a logic "System" create a list the Systems input's names
         //names for that "System". Then pass in the list!
         String[] names = {"A", "B","C", "D", "E", "F"};
-        LogicBoard board = new LogicBoard(names);
+        LogicBoard board = new LogicBoard(names,"Logic");
         //------------------------------------------------------------------
 
         //Adding gates to the board:
-        board.addGate(LogicBoard.NOT, "A'", "A", null);
-        board.addGate(LogicBoard.OR, "A'+B", "A'","B" );
-        board.addGate(LogicBoard.AND, "CD","C", "D");
-        board.addGate(LogicBoard.OR, "E+F", "E","F");
-        board.addGate(LogicBoard.OR,"(A'+B)+CD","A'+B","CD");
-        board.addGate(LogicBoard.OR,"((A'+B)+CD)+E+F","(A'+B)+CD","E+F");
-        board.addGate(LogicBoard.NOT,"(((A'+B)+CD)+E+F)'","((A'+B)+CD)+E+F",null);
+        board.addGate(LogicBoard.NOT, "A'", "A", null, 0, 0);
+        board.addGate(LogicBoard.OR, "A'+B", "A'","B", 0, 0 );
+        board.addGate(LogicBoard.AND, "CD","C", "D", 0, 0);
+        board.addGate(LogicBoard.OR, "E+F", "E","F", 0, 0);
+        board.addGate(LogicBoard.OR,"(A'+B)+CD","A'+B","CD", 0, 0);
+        board.addGate(LogicBoard.OR,"((A'+B)+CD)+E+F","(A'+B)+CD","E+F", 0, 0);
+        board.addGate(LogicBoard.NOT,"(((A'+B)+CD)+E+F)'","((A'+B)+CD)+E+F",null, 0, 0);
         //------------------------------------------------------------------------
 
         //Generating the truth table of a LogicBoard System:

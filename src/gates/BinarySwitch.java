@@ -1,5 +1,7 @@
 package gates;
 
+import Exceptions.NoSuchGateException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,13 +12,14 @@ public class BinarySwitch implements Gate, Serializable
 {
 
     private int output;
-    private Gate outputTo;
+    private ArrayList<Gate> outputTos;
     private String nameID;
     private final String TYPE = "OOD";
     private final String GATE = "BinarySwitch";
+    private Gate input1;
 
     public BinarySwitch(){
-        setOutputTo(null);
+        this.outputTos = new ArrayList<Gate>();
         setGateID(nameID);
         setOutput(0);
 
@@ -25,7 +28,7 @@ public class BinarySwitch implements Gate, Serializable
     }
 
     public BinarySwitch(String nameID){
-        setOutputTo(null);
+        this.outputTos = new ArrayList<Gate>();
         setGateID(nameID);
         setOutput(0);
     }
@@ -36,24 +39,62 @@ public class BinarySwitch implements Gate, Serializable
         evaluateGate();
 
     }
-    public void setOutputTo(Gate gate){
-        this.outputTo = gate;
+    public void setOutputTo(Gate outputTo){
+        this.outputTos.add(outputTo);
     }
     @Override
     public void evaluateGate() {
-        Gate pointer = getOutputTo();
-        int i =0;
-        while(pointer != null){
-            pointer.evaluateGate();
-            if(pointer.getOutputTo() != null) {
-                pointer = pointer.getOutputTo();
+
+        if(this.input1 != null) {
+            this.input1.evaluateGate();
+            this.output = this.input1.getOutput();
+        }
+          /*  Gate pointer = getOutputTo();
+            int i = 0;
+            while (pointer != null) {
+                pointer.evaluateGate();
+                if (pointer.getOutputTo() != null) {
+                    pointer = pointer.getOutputTo();
+                } else {
+                    break;
+                }
+            }*/
+        if(this.outputTos != null) {
+            updateOutput();
+        }
+    }
+
+
+    private void updateOutput() {
+        for(Gate g : this.outputTos){
+           if(g != null) {
+               cascade(g);
+           }
+        }
+    }
+
+    private void cascade(Gate g){
+        ArrayList<Gate> temp = new ArrayList<Gate>();
+
+        //Base case-1
+        if(g == null){
+            return;
+        }
+        //Base case-2
+        if(g.getOutputTo() == null){
+            return;
+        }
+        else{
+            for(Gate gate : g.getOutputTo()){
+                temp.add(gate);
             }
-            else{
-                break;
+            for(Gate gate : temp){
+                cascade(gate);
             }
         }
-        //Update all gates connected to this switch
+        return;
     }
+
 
     @Override
     public String getGateID() {
@@ -79,28 +120,57 @@ public class BinarySwitch implements Gate, Serializable
         return this.output;
     }
     @Override
-    public Gate getOutputTo() {
-        return this.outputTo;
+    public ArrayList<Gate> getOutputTo() {
+        return this.outputTos;
     }
 
     public void remove(){
-        this.outputTo = null;
+        this.outputTos = null;
     }
 
+    @Override
+    public Gate getOutputTo(String gateID) {
+        Gate found = null;
+        for(int i=0; i < getOutputTo().size(); i++){
+            if(getOutputTo().get(i).getGateID().equalsIgnoreCase(gateID)){
+                found = getOutputTo().get(i);
+            }
+        }
 
+        return found;    }
 
-
-
+    @Override
+    public void removeOutputTo(String gateID) {
+        Gate found = null;
+        for(Gate g : this.getOutputTo()){
+            if(g.getGateID().equalsIgnoreCase(gateID)){
+                found = g;
+            }
+        }
+        if(found == null){
+            throw new NoSuchGateException(gateID);
+        }
+        else{
+            this.getOutputTo().remove(found);
+        }
+    }
 
 
     @Override
     public Gate getInput1From() {
-        return null;
+        return this.input1;
     }
     @Override
-    public void setInput1From(Gate input1From) {
+    public void setInput1From(Gate input){
+        input.setOutputTo(this);
+        this.input1 = input;
 
     }
+
+
+
+
+
     @Override
     public Gate getInput2From() {
         return null;

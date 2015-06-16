@@ -2,6 +2,7 @@ package gates;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 /**
  * Created by Kyle Ferguson on 6/2/15.
@@ -37,7 +38,7 @@ public class BinaryProbe implements Gate, Serializable{
     }
 
     @Override
-    public Gate getOutputTo() {
+    public ArrayList<Gate> getOutputTo() {
         return null;
     }
 
@@ -82,6 +83,16 @@ public class BinaryProbe implements Gate, Serializable{
     }
     public void remove(){
         this.input1From = null;
+    }
+
+    @Override
+    public Gate getOutputTo(String gateID) {
+        return null;
+    }
+
+    @Override
+    public void removeOutputTo(String gateID) {
+
     }
 
 

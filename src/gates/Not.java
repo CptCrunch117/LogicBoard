@@ -1,6 +1,9 @@
 package gates;
 
+import Exceptions.NoSuchGateException;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Kyle Ferguson on 5/31/2015.
@@ -9,28 +12,28 @@ public class Not implements Gate, Serializable {
 
 
     private int output;
-    private Gate outputTo;
+    private ArrayList<Gate> outputTos;
     private Gate input1From;
     private String nameID;
     private final String TYPE = "IAOD";
     private final String GATE = "NOT";
 
     public Not(){
+        this.outputTos = new ArrayList<Gate>();
         setGateID(null);
-        setOutputTo(null);
         setGateID(null);
         evaluateGate();
     }
 
     public Not(Gate input1){
-        setOutputTo(null);
+        this.outputTos = new ArrayList<Gate>();
         setInput1From(input1);
         setGateID(null);
         evaluateGate();
     }
 
     public Not(Gate input1From, String nameID){
-        setOutputTo(null);
+        this.outputTos = new ArrayList<Gate>();
         setInput1From(input1From);
         setGateID(nameID);
         evaluateGate();
@@ -79,8 +82,36 @@ public class Not implements Gate, Serializable {
     }
 
     public void remove(){
-        this.outputTo = null;
+        this.outputTos = null;
         this.input1From = null;
+    }
+
+    @Override
+    public Gate getOutputTo(String gateID) {
+        Gate found = null;
+        for(int i=0; i < getOutputTo().size(); i++){
+            if(getOutputTo().get(i).getGateID().equalsIgnoreCase(gateID)){
+                found = getOutputTo().get(i);
+            }
+        }
+
+        return found;
+    }
+
+    @Override
+    public void removeOutputTo(String gateID) {
+        Gate found = null;
+        for(Gate g : this.getOutputTo()){
+            if(g.getGateID().equalsIgnoreCase(gateID)){
+                found = g;
+            }
+        }
+        if(found == null){
+            throw new NoSuchGateException(gateID);
+        }
+        else{
+            this.getOutputTo().remove(found);
+        }
     }
 
     private synchronized int getInput1() {
@@ -96,11 +127,11 @@ public class Not implements Gate, Serializable {
     }
 
     @Override
-    public Gate getOutputTo() {
-        return outputTo;
+    public ArrayList<Gate> getOutputTo() {
+        return this.outputTos;
     }
     public void setOutputTo(Gate outputTo) {
-        this.outputTo = outputTo;
+        this.outputTos.add(outputTo);
     }
 
     public Gate getInput1From() {
@@ -110,6 +141,8 @@ public class Not implements Gate, Serializable {
         input1.setOutputTo(this);
         this.input1From = input1;
     }
+
+
 
     //  N/A  \\
     public Gate getInput2From() {

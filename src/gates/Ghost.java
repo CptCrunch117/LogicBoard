@@ -1,7 +1,9 @@
 package gates;
 
+import Exceptions.NoSuchGateException;
+
 import java.io.Serializable;
-import java.util.Random;
+import java.util.ArrayList;
 
 /**
  * Created by Kyle Ferguson on 6/3/15.
@@ -12,17 +14,27 @@ public class Ghost implements Gate, Serializable {
     private final String GATE = "GHOST";
     private String gateID;
     private Gate input1From;
-    private Gate outputTo;
+    private Gate input2From;
+    private ArrayList<Gate> outputTos;
 
 
-   public Ghost(Gate input1, Gate outputTo, String gateID){
+   public Ghost(Gate input1, Gate input2, Gate outputTo, String gateID){
+       this.outputTos = new ArrayList<Gate>();
        setInput1From(input1);
+       setInput2From(input2);
        setOutputTo(outputTo);
        this.gateID = gateID;
 
    }
 
 
+    public Ghost(Gate input1, Gate outputTo, String gateID){
+        this.outputTos = new ArrayList<Gate>();
+        setInput1From(input1);
+        setOutputTo(outputTo);
+        this.gateID = gateID;
+
+    }
 
     @Override
     public int getOutput() {
@@ -30,13 +42,13 @@ public class Ghost implements Gate, Serializable {
     }
 
     @Override
-    public Gate getOutputTo() {
-        return this.outputTo;
+    public ArrayList<Gate> getOutputTo() {
+        return this.outputTos;
     }
 
     @Override
     public void setOutputTo(Gate outputTo) {
-        this.outputTo = outputTo;
+        this.outputTos.add(outputTo);
     }
 
     @Override
@@ -64,16 +76,58 @@ public class Ghost implements Gate, Serializable {
 
     @Override
     public Gate getInput2From() {
-        return null;
+        return this.input2From;
     }
 
     @Override
     public void setInput2From(Gate input2) {
+        input2.setOutputTo(this);
+        this.input2From = input2;
+    }
+
+    @Override
+    public void removeOutputTo(String gateID){
+
+        Gate found = null;
+        for(Gate g : this.getOutputTo()){
+            if(g.getGateID().equalsIgnoreCase(gateID)){
+                found = g;
+            }
+        }
+        if(found == null){
+            throw new NoSuchGateException(gateID);
+        }
+        else{
+            this.getOutputTo().remove(found);
+        }
 
     }
 
+    @Override
+    public Gate getOutputTo(String gateID) {
+        Gate found = null;
+        for(Gate g : this.getOutputTo()){
+            if(g.getGateID().equalsIgnoreCase(gateID)){
+                found = g;
+            }
+        }
+        if(found == null){
+            throw new NoSuchGateException(gateID);
+        }
 
 
+        return found;
+    }
+
+    @Override
+    public String getGateID() {
+        return this.gateID;
+    }
+
+    public void remove(){
+        this.outputTos = null;
+        this.input1From = null;
+    }
         // N/A \\
 
 
@@ -82,10 +136,6 @@ public class Ghost implements Gate, Serializable {
 
     }
 
-    @Override
-    public String getGateID() {
-        return this.gateID;
-    }
 
     @Override
     public void setGateID(String nameID) {
@@ -97,8 +147,7 @@ public class Ghost implements Gate, Serializable {
 
     }
 
-    public void remove(){
-        this.outputTo = null;
-        this.input1From = null;
-    }
+
+
+
 }
