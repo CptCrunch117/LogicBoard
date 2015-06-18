@@ -146,8 +146,22 @@ public class Or implements Gate, Serializable {
         this.input2From = input2;
     }
 
+    @Override
+    public int findInput(Gate input){
+        int in = 0;
+        if(getInput1From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 1;
+        }
+        else if(getInput2From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 2;
+        }
+        return in;
+    }
+
     public void remove(){
         this.outputTos = null;
+        boolean oneRemove = this.input1From.getOutputTo().remove(this);
+        boolean twoRemove = this.input2From.getOutputTo().remove(this);
         this.input1From = null;
         this.input2From = null;
     }

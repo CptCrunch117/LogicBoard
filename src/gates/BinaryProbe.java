@@ -95,6 +95,18 @@ public class BinaryProbe implements Gate, Serializable{
 
     }
 
+    @Override
+    public int findInput(Gate input) {
+        int in = 0;
+        if(getInput1From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 1;
+        }
+        else if(getInput2From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 2;
+        }
+        return in;
+    }
+
 
     // N/A  \\
 

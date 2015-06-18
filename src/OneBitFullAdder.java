@@ -25,35 +25,35 @@ public class OneBitFullAdder {
         LogicBoard fullAdder = new LogicBoard(inputs, "OneBitAdder");
 
         //XOR1
-        fullAdder.addGate(LogicBoard.NOT,"B'","B",null, 0, 0);
-        fullAdder.addGate(LogicBoard.AND, "AB'", "A", "B'", 0, 0);
+        fullAdder.addGate(LogicBoard.NOT,"B'","B",null);
+        fullAdder.addGate(LogicBoard.AND, "AB'", "A", "B'");
 
 
-        fullAdder.addGate(LogicBoard.NOT,"A'","A",null, 0, 0);
-        fullAdder.addGate(LogicBoard.AND,"A'B","A'","B", 0, 0);
+        fullAdder.addGate(LogicBoard.NOT,"A'","A",null);
+        fullAdder.addGate(LogicBoard.AND,"A'B","A'","B");
 
-        fullAdder.addGate(LogicBoard.OR,"AB'+A'B","A'B","AB'", 0, 0);
+        fullAdder.addGate(LogicBoard.OR,"AB'+A'B","A'B","AB'");
         //-----------------------------------------------------------
 
         //AND1
-        fullAdder.addGate(LogicBoard.AND,"AB","A","B",0, 0);
+        fullAdder.addGate(LogicBoard.AND,"AB","A","B");
         //AND2
-        fullAdder.addGate(LogicBoard.AND,"(AB'+A'B)C","AB'+A'B","Cin",0, 0);
+        fullAdder.addGate(LogicBoard.AND,"(AB'+A'B)C","AB'+A'B","Cin");
 
 
         //XOR2
-        fullAdder.addGate(LogicBoard.NOT,"C'","Cin",null, 0, 0);
-        fullAdder.addGate(LogicBoard.AND, "(AB'+A'B)C'", "AB'+A'B", "C'", 0, 0);
+        fullAdder.addGate(LogicBoard.NOT,"C'","Cin",null);
+        fullAdder.addGate(LogicBoard.AND, "(AB'+A'B)C'", "AB'+A'B", "C'");
 
 
-        fullAdder.addGate(LogicBoard.NOT,"(AB'+A'B)'","AB'+A'B",null, 0, 0);
-        fullAdder.addGate(LogicBoard.AND,"((AB'+A'B)')C","(AB'+A'B)'","Cin", 0, 0);
+        fullAdder.addGate(LogicBoard.NOT,"(AB'+A'B)'","AB'+A'B",null);
+        fullAdder.addGate(LogicBoard.AND,"((AB'+A'B)')C","(AB'+A'B)'","Cin");
 
         //(((AB'+A'B)')C)+((AB'+A'B)C)
-        fullAdder.addGate(LogicBoard.OR,"Sum","((AB'+A'B)')C","(AB'+A'B)C'", 0, 0);
+        fullAdder.addGate(LogicBoard.OR,"Sum","((AB'+A'B)')C","(AB'+A'B)C'");
         //-----------------------------------------------------------
         //OR1
-        fullAdder.addGate(LogicBoard.OR, "Cout", "AB", "(AB'+A'B)C", 0, 0);
+        fullAdder.addGate(LogicBoard.OR, "Cout", "AB", "(AB'+A'B)C");
 
         System.out.println("-----One bit Full adder-----");
         System.out.println(fullAdder.generateTruthTable());

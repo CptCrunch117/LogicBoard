@@ -81,11 +81,12 @@ public class Not implements Gate, Serializable {
         this.output = output;
     }
 
-    public void remove(){
+    public void remove() {
         this.outputTos = null;
+        boolean oneRemove = this.input1From.getOutputTo().remove(this);
         this.input1From = null;
+        this.outputTos = null;
     }
-
     @Override
     public Gate getOutputTo(String gateID) {
         Gate found = null;
@@ -112,6 +113,18 @@ public class Not implements Gate, Serializable {
         else{
             this.getOutputTo().remove(found);
         }
+    }
+
+    @Override
+    public int findInput(Gate input) {
+        int in = 0;
+        if(getInput1From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 1;
+        }
+        else if(getInput2From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 2;
+        }
+        return in;
     }
 
     private synchronized int getInput1() {

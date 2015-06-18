@@ -113,4 +113,6 @@ public interface Gate {
     Gate getOutputTo(String gateID);
 
     void removeOutputTo(String gateID);
+
+    int findInput(Gate input);
 }

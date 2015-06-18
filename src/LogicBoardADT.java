@@ -20,7 +20,7 @@ public interface LogicBoardADT {
      * @param input1 this is what links the gates to each-other, also the input for the gate
      * @param input2 (Optional) If only one input simply pass null and the method will handle the rest!
      */
-    void addGate(String gate, String gateID, String input1, String input2, int in1_in, int in2_in);
+    void addGate(String gate, String gateID, String input1, String input2);
 
     /**
      * This method adds inputs to the logicboard (this helps the data determine the inputs when generating a truthTable)

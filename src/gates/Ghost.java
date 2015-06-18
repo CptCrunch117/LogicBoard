@@ -104,6 +104,18 @@ public class Ghost implements Gate, Serializable {
     }
 
     @Override
+    public int findInput(Gate input) {
+        int in = 0;
+        if(getInput1From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 1;
+        }
+        else if(getInput2From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 2;
+        }
+        return in;
+    }
+
+    @Override
     public Gate getOutputTo(String gateID) {
         Gate found = null;
         for(Gate g : this.getOutputTo()){
@@ -126,7 +138,10 @@ public class Ghost implements Gate, Serializable {
 
     public void remove(){
         this.outputTos = null;
+        boolean oneRemove = this.input1From.getOutputTo().remove(this);
+        boolean twoRemove = this.input2From.getOutputTo().remove(this);
         this.input1From = null;
+        this.input2From = null;
     }
         // N/A \\
 
