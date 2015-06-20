@@ -1,3 +1,7 @@
+import gates.Gate;
+
+import java.util.ArrayList;
+
 /**
  * Created by CptAmerica on 6/14/15.
  */
@@ -56,7 +60,26 @@ public class OneBitFullAdder {
         fullAdder.addGate(LogicBoard.OR, "Cout", "AB", "(AB'+A'B)C");
 
         System.out.println("-----One bit Full adder-----");
-        System.out.println(fullAdder.generateTruthTable());
+        //System.out.println(fullAdder.generateTruthTable());
+
+
+       ArrayList<String> out = new ArrayList<String>();
+       out.add("Sum");
+       out.add("Cout");
+       fullAdder.setSystemOutputs(out);
+       //Gate fullbitAdd = fullAdder.convertBoard();
+
+      String[] binSwitch = {"A","B","C", "D"};
+      LogicBoard board = new LogicBoard(binSwitch, "tester");
+
+     ArrayList<String> in = new ArrayList<String>();
+     in.add("A");
+     in.add("B");
+     in.add("C");
+      board.addGate(fullAdder, "Adder",in);
+      board.updateLogicBoard();
+      System.out.println(board.generateTruthTable());
+
 
     }
 

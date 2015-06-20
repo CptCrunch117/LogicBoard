@@ -158,6 +158,7 @@ public class Or implements Gate, Serializable {
         return in;
     }
 
+
     public void remove(){
         this.outputTos = null;
         boolean oneRemove = this.input1From.getOutputTo().remove(this);
@@ -166,31 +167,33 @@ public class Or implements Gate, Serializable {
         this.input2From = null;
     }
 
-    @Override
-    public Gate getOutputTo(String gateID) {
-        Gate found = null;
-        for(int i=0; i < getOutputTo().size(); i++){
-            if(getOutputTo().get(i).getGateID().equalsIgnoreCase(gateID)){
-                found = getOutputTo().get(i);
-            }
-        }
 
-        return found;
+
+    //-----Not Applicable-----\\
+
+    @Override
+    public ArrayList<Gate> getBlockInputFrom() {
+        return null;
     }
 
     @Override
-    public void removeOutputTo(String gateID) {
-        Gate found = null;
-        for(Gate g : this.getOutputTo()){
-            if(g.getGateID().equalsIgnoreCase(gateID)){
-                found = g;
-            }
-        }
-        if(found == null){
-            throw new NoSuchGateException(gateID);
-        }
-        else{
-            this.getOutputTo().remove(found);
-        }
+    public void setBlockInputFrom(ArrayList<Gate> input1From) {
+
     }
+
+    @Override
+    public ArrayList<Gate> getSysOut() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Gate> getInputs() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Gate> getLogicBoard() {
+        return null;
+    }
+
 }

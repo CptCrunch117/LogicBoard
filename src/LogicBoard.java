@@ -10,11 +10,20 @@ import java.util.ArrayList;
 /**
  * Created by Kyle Ferguson on 6/2/15.
  */
-public class LogicBoard implements LogicBoardADT, Serializable {
+public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     static final String AND = "and";
     static final String NOT = "not";
     static final String OR = "or";
 
+
+    //Gate variables
+    ArrayList<Gate> inputs;
+    ArrayList<Gate> outputs;
+    private String gateID;
+    boolean logicLock;
+    final String TYPE = "LogicBoard";
+
+    //LogicBoard Variables
     private String logicBoardName;
     private ArrayList<Gate> logicBoard;             //Keeps track of System inputs
     private ArrayList<Gate> openInputs;             //Keeps track of gates with null inputs
@@ -33,6 +42,10 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         this.sysOut = new ArrayList<Gate>();
         this.blocks = new ArrayList<LogicBoard>();
         this.openOutputs = findOpenOutputs();
+        this.logicLock = false;
+        this.inputs = new ArrayList<Gate>();
+        this.outputs = new ArrayList<Gate>();
+        this.blocks = new ArrayList<LogicBoard>();
         updateIODList();
     }
 
@@ -46,13 +59,16 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         this.allGates = new ArrayList<Gate>();
         this.iods = new ArrayList<Gate>();
         this.sysOut = new ArrayList<Gate>();
-
+        this.inputs = new ArrayList<Gate>();
+        this.outputs = new ArrayList<Gate>();
         for(int i=0; i < inputIDs.length; i++){
             BinarySwitch bSwitch = new BinarySwitch(inputIDs[i]);
             addOOD(bSwitch);
             this.allGates.add(bSwitch);
         }
         this.openOutputs = findOpenOutputs();
+        this.logicLock = false;
+        this.blocks = new ArrayList<LogicBoard>();
         updateIODList();
     }
 
@@ -81,34 +97,66 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         return find;
     }
 
+    /**
+     * This method is used by findOutputs method. This is a recursive method that adds all objects
+     * in the linked Gate list that either don't output to any gates and/or adds any ghost gates.
+     * @param g the gate to check, the arrayList for found gates, the same arrayList is passed through
+     *          each iteration of recursion to keep a list of all found gates throughout recusive process
+     * @param find the arraylist that holds all found gates.
+     */
     private void seeker(Gate g, ArrayList<Gate> find){
         ArrayList<Gate> temp = new ArrayList<Gate>();
 
-        if(g.getGateType().equalsIgnoreCase("ghost")){
-            if(!find.contains(g)){
-                find.add(g);
-            }
-        }
-
-        //Base case-2
-        if(g.getOutputTo().isEmpty()){
-            if(!find.contains(g)){
-                find.add(g);
-            }
-            return;
-        }
-        else{
-            for(Gate gate : g.getOutputTo()){
-                if(gate != null) {
-                    temp.add(gate);
+        //LogicBoard gates have n outputs and each have n outputTos
+        if(g.getDeviceType().equalsIgnoreCase("logicboard")){
+            for(Gate gl : g.getSysOut()){
+                if(gl.getOutputTo().isEmpty()){
+                    if(!find.contains(gl)){
+                        find.add(gl);
+                    }
+                }
+                else {
+                    seeker(gl, find);
                 }
             }
-            for(Gate gate : temp){
-                seeker(gate, find);
+
+        }
+        //if gate is not a logicBoard Block.
+        else {
+
+            //A case (not a base case as ghosts of gates have outputs! (only 1 but still))
+            if (g.getGateType().equalsIgnoreCase("ghost")) {
+                if (!find.contains(g)) {
+                    find.add(g);
+                }
+            }
+
+            //Base case-1
+            if (g.getOutputTo().isEmpty()) {
+                if (!find.contains(g)) {
+                    find.add(g);
+                }
+                return;
+            } else {
+                for (Gate gate : g.getOutputTo()) {
+                    if (gate != null) {
+                        temp.add(gate);
+                    }
+                }
+                for (Gate gate : temp) {
+                    seeker(gate, find);
+                }
             }
         }
         return;
     }
+
+
+    /**
+     * This method utilizes a different flavor of the seeker recursion method.
+     * @param gateID the gateID of target gate object.
+     * @return the target gate object (with same gateID passed of course), or, if not found, null
+     */
     public Gate findGate(String gateID){
         Gate found = null;
         boolean isFound = false;
@@ -139,38 +187,72 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         return found;
     }
 
+    /**
+     * A spin on the seeker method. This method is used by the findGate method. This recursive method returns a
+     * Gate object when the gateID(a string) that is passed into each iteration of every recursion matches the gates
+     * gateID.
+     *
+     * @param find the next gate in the linked Gate list.
+     * @param gateID the gateID of the target Gate object
+     * @return the target gate object (with same gateID passed of course), or, if not found, null
+     */
     private Gate retriever(Gate find, String gateID){
         ArrayList<Gate> temp = new ArrayList<Gate>();
         Gate found = null;
+        boolean isFound = false;
 
+        if(find.getDeviceType().equalsIgnoreCase("logicboard")){
 
-        if(find.getOutputTo().isEmpty()){
-            if(find.getGateID().equalsIgnoreCase(gateID)){
+            for(int i=0; i < find.getSysOut().size(); i++){
+                if(find.getSysOut().get(i).getGateID().equalsIgnoreCase(gateID)){
+                    found = find.getSysOut().get(i);
+                    isFound = true;
+                    break;
+                }
+            }
+
+            if(!isFound){
+                for(int i=0; i < find.getSysOut().size(); i++) {
+                    Gate g = find.getSysOut().get(i);
+                    found = retriever(g, gateID);
+                    if(found != null){
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if (find.getOutputTo().isEmpty()) {
+                if (find.getGateID().equalsIgnoreCase(gateID)) {
                     found = find;
                     return found;
+                }
+                return null;
             }
-            return null;
-        }
-        //Base case-2
-        if (find.getGateID().equalsIgnoreCase(gateID)){
+            //Base case-2
+            if (find.getGateID().equalsIgnoreCase(gateID)) {
                 found = find;
-        }
-        else{
-            for(Gate gate : find.getOutputTo()){
-                temp.add(gate);
-            }
-            for(Gate gate : temp){
-                found = retriever(gate, gateID);
-                if(found != null){
-                    break;
+            } else {
+                for (Gate gate : find.getOutputTo()) {
+                    temp.add(gate);
+                }
+                for (Gate gate : temp) {
+                    found = retriever(gate, gateID);
+                    if (found != null) {
+                        break;
+                    }
                 }
             }
         }
 
-
         return found;
     }
 
+    /**
+     * Finds A gate in
+     * @param gateID
+     * @return
+     */
     public Gate getAvailableGate(String gateID){
         Gate found = null;
         for(int i=0; i < this.allGates.size(); i++){
@@ -199,7 +281,7 @@ public class LogicBoard implements LogicBoardADT, Serializable {
 
 
     /**
-     * Compiles a list of Input only devi
+     * Compiles a list of available
      * @return
      */
     public ArrayList<Gate> getAvailableOutputs(){
@@ -258,7 +340,7 @@ public class LogicBoard implements LogicBoardADT, Serializable {
 
         }
 
-        if (gate.equalsIgnoreCase("BinaryProbe")){
+        else if (gate.equalsIgnoreCase("BinaryProbe")){
 
                 BinaryProbe probe = new BinaryProbe(input1, gateID);
                 allGates.add(probe);
@@ -266,7 +348,9 @@ public class LogicBoard implements LogicBoardADT, Serializable {
 
 
         }
+
 }
+
 
     @Override
     public void addGate(String gate, String gateID, String input1_nameID, String input2_nameID) {
@@ -284,8 +368,8 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         Gate inputTwo = null;
 
         if(gate.equalsIgnoreCase("and") || gate.equalsIgnoreCase("or")) {
-            inputOne = getAvailableGate(input1_nameID);
-            inputTwo = getAvailableGate(input2_nameID);
+            inputOne = findGate(input1_nameID);
+            inputTwo = findGate(input2_nameID);
         }/*
         else if(this.blocks.contains(input1_nameID)){
                 for(int i=0; i<this.blocks.size();i++){
@@ -295,7 +379,7 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 }
             }*/
         else{
-            inputOne = getAvailableGate(input1_nameID);
+            inputOne = findGate(input1_nameID);
         }
 
 
@@ -319,6 +403,32 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         updateIODList();
     }
 
+    @Override
+    public void addGate(LogicBoard block, String gateID, ArrayList<String> inputs){
+        this.blocks.add(block);
+        Gate gate = block;
+        if(gate.getDeviceType().equalsIgnoreCase("logicboard")) {
+            if (inputs.size() == gate.getInputs().size()) {
+                ArrayList<Gate> gates = new ArrayList<Gate>();
+
+                //find and compile array of gates for the input to the logic block
+                for(int i=0; i < inputs.size();i++){
+                    Gate found = findGate(inputs.get(i));
+                    if(found != null) {
+                        gates.add(found);
+                    }else{
+                        throw new NoSuchGateException(inputs.get(i));
+                    }
+                }
+                //set inputs for logic block
+                gate.setBlockInputFrom(gates);
+            }
+            this.allGates.add(gate);
+        }
+        //Update openOuput list after adding
+        this.openOutputs = findOpenOutputs();
+        updateIODList();
+    }
 
     @Override
     public void addOOD(Gate gate) {
@@ -403,6 +513,10 @@ public class LogicBoard implements LogicBoardADT, Serializable {
             //Get binary states of outputs and Add their state to the truth table.
             int outputIterate = (this.logicBoard.size());
             for(Gate g : this.openOutputs){
+                g.evaluateGate();
+                for(LogicBoard blk : this.blocks){
+                    blk.updateLogicBoard();
+                }
                 truthTable[i][outputIterate] = g.getOutput();
                 outputIterate++;
             }
@@ -468,23 +582,6 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                 else if(inputPos == 2){
                     remove.getOutputTo().get(i).setInput2From(ghost1);
                 }
-                /*if(remove.getOutputTo() != null){
-                    if(remove.getOutputTo().get(i).getInput1From() != null) {
-                        if (remove.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(remove.getGateID())) {
-                            remove.getOutputTo().get(i).setInput1From(ghost1);
-                        }
-                        else if (remove.getOutputTo().get(i).getInput2From() != null) {
-                            if (remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())) {
-                                remove.getOutputTo().get(i).setInput2From(ghost1);
-                            }
-                        }
-                    }
-                }
-                else if(remove.getOutputTo().get(i).getInput2From() != null){
-                    if(remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())){
-                        remove.getOutputTo().get(i).setInput2From(ghost1);
-                    }
-                }*/
                 allGates.add(ghost1);
             }
             allGates.remove(remove);
@@ -503,20 +600,6 @@ public class LogicBoard implements LogicBoardADT, Serializable {
                     remove.getOutputTo().get(i).setInput2From(ghost);
                 }
 
-               /* if (remove.getOutputTo() != null) {
-                    if (remove.getOutputTo().get(i).getInput1From() != null) {
-                        if (remove.getOutputTo().get(i).getInput1From().getGateID().equalsIgnoreCase(remove.getGateID())) {
-                            remove.getOutputTo().get(i).setInput1From(ghost);
-                        } else if (remove.getOutputTo().get(i).getInput2From() != null) {
-                            if (remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())) {
-                                remove.getOutputTo().get(i).setInput2From(ghost);
-                            }
-                        }
-                    } else if (remove.getOutputTo().get(i).getInput2From() != null) {
-                        if (remove.getOutputTo().get(i).getInput2From().getGateID().equalsIgnoreCase(remove.getGateID())) {
-                            remove.getOutputTo().get(i).setInput2From(ghost);
-                        }
-                    }*/
                 allGates.add(ghost);
                 }
             allGates.remove(remove);
@@ -530,9 +613,26 @@ public class LogicBoard implements LogicBoardADT, Serializable {
 
     @Override
     public void setSystemOutputs(ArrayList<String> gateIDs) {
+        int count = 0;
+        boolean isSet = true;
+
         for(String s : gateIDs){
             Gate gate = findGate(s);
-            this.sysOut.add(gate);
+
+            if(gate != null) {
+                gate.setGateID(this.logicBoardName+"_"+gate.getGateID());
+                this.sysOut.add(gate);
+                count++;
+
+            }
+            else{
+                isSet = false;
+                break;
+            }
+        }
+        //LockGate from manipulation.
+        if(isSet){
+            this.logicLock = true;
         }
     }
 
@@ -782,6 +882,174 @@ public class LogicBoard implements LogicBoardADT, Serializable {
         }
 
     }
+
+    public Gate convertBoard(){
+        Gate gate = null;
+        if(this.logicLock){
+            gate = (Gate)this;
+        }
+        return gate;
+    }
+
+
+
+
+
+    //----------GATE IMPLEMENTATION----------\\
+
+    @Override
+    public int getOutput() {
+        return 0;
+    }
+
+    @Override
+    public ArrayList<Gate> getOutputTo() {
+        return null;
+    }
+
+    @Override
+    public void setOutputTo(Gate outputTo) {
+
+
+    }
+
+
+    @Override
+    public void evaluateGate() {
+
+        //Update input values
+        for(Gate g : this.inputs){
+            g.evaluateGate();
+        }
+        //Set updated input values to binary switches
+        for(int in=0; in < this.logicBoard.size(); in++){
+            this.logicBoard.get(in).setOutput(this.inputs.get(in).getOutput());
+            this.logicBoard.get(in).evaluateGate();
+        }
+
+        for(Gate g : this.sysOut){
+            g.evaluateGate();
+        }
+
+        //Update this gate
+        this.updateLogicBoard();
+
+    }
+
+    @Override
+    public String getGateID() {
+        return this.gateID;
+    }
+
+    @Override
+    public void setGateID(String nameID) {
+        this.gateID = nameID;
+    }
+
+    @Override
+    public String getDeviceType() {
+        return this.TYPE;
+    }
+
+    @Override
+    public String getGateType() {
+        return this.logicBoardName;
+    }
+    @Override
+    public void remove() {
+
+        //remove reference of the outputs
+        this.outputs = null;
+
+        //remove reference to this gate from other gates
+        for(Gate g : this.inputs){
+            g.getOutputTo().remove(this);
+        }
+
+        //remove reference of other gates that reference this gate
+        this.inputs = null;
+    }
+
+    @Override
+    public int findInput(Gate input) {
+
+        for(Gate g : this.inputs){
+
+            if(g.getGateID().equalsIgnoreCase(input.getGateID())){
+
+            }
+
+        }
+
+        return 0;
+    }
+
+    @Override
+    public ArrayList<Gate> getBlockInputFrom() {
+        return this.inputs;
+    }
+
+    @Override
+    public void setBlockInputFrom(ArrayList<Gate> input1From) {
+        if(this.logicBoard.size() == input1From.size()){
+
+            for(int i=0; i < this.logicBoard.size();i++){
+                this.logicBoard.get(i).setInput1From(input1From.get(i));
+                this.inputs.add(input1From.get(i));
+            }
+            for(int i=0; i < input1From.size();i++){
+                input1From.get(i).setOutputTo(this.logicBoard.get(i));
+            }
+
+        }
+        else{
+            throw new IncompatibleInputSizeException(this.gateID);
+        }
+
+    }
+
+    public ArrayList<Gate> getSysOut(){
+        return this.sysOut;
+    }
+
+    @Override
+    public ArrayList<Gate> getInputs() {
+        return this.logicBoard;
+    }
+
+    @Override
+    public ArrayList<Gate> getLogicBoard() {
+        return this.logicBoard;
+    }
+
+
+    //-----NA-----\\
+    @Override
+    public Gate getInput2From() {
+        return null;
+    }
+
+    @Override
+    public void setInput2From(Gate input2From) {
+
+    }
+    @Override
+    public void setOutput(int output) {
+
+    }
+
+
+    @Override
+    public Gate getInput1From() {
+        return null;
+    }
+
+    @Override
+    public void setInput1From(Gate input1From) {
+
+    }
+
+
 
 
 }

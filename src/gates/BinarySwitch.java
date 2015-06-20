@@ -30,7 +30,7 @@ public class BinarySwitch implements Gate, Serializable
     public BinarySwitch(String nameID){
         this.outputTos = new ArrayList<Gate>();
         setGateID(nameID);
-        setOutput(0);
+        setOutput(1);
     }
 
 
@@ -128,32 +128,6 @@ public class BinarySwitch implements Gate, Serializable
         this.outputTos = null;
     }
 
-    @Override
-    public Gate getOutputTo(String gateID) {
-        Gate found = null;
-        for(int i=0; i < getOutputTo().size(); i++){
-            if(getOutputTo().get(i).getGateID().equalsIgnoreCase(gateID)){
-                found = getOutputTo().get(i);
-            }
-        }
-
-        return found;    }
-
-    @Override
-    public void removeOutputTo(String gateID) {
-        Gate found = null;
-        for(Gate g : this.getOutputTo()){
-            if(g.getGateID().equalsIgnoreCase(gateID)){
-                found = g;
-            }
-        }
-        if(found == null){
-            throw new NoSuchGateException(gateID);
-        }
-        else{
-            this.getOutputTo().remove(found);
-        }
-    }
 
     @Override
     public int findInput(Gate input) {
@@ -166,6 +140,7 @@ public class BinarySwitch implements Gate, Serializable
         }
         return in;
     }
+
 
 
     @Override
@@ -182,6 +157,33 @@ public class BinarySwitch implements Gate, Serializable
 
 
 
+    //-----Not Applicable-----\\
+
+
+    @Override
+    public ArrayList<Gate> getBlockInputFrom() {
+        return null;
+    }
+
+    @Override
+    public void setBlockInputFrom(ArrayList<Gate> input1From) {
+
+    }
+
+    @Override
+    public ArrayList<Gate> getSysOut() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Gate> getInputs() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Gate> getLogicBoard() {
+        return null;
+    }
 
     @Override
     public Gate getInput2From() {

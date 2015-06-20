@@ -39,6 +39,10 @@ public class Driver4 {
         board1.removeGate("OR1");
         System.out.println(board1.generateTruthTable());
 
+        System.out.println();
+        System.out.println();
+        System.out.println("-----Truth Table After replacing one of the ghosts of OR1 with an AND gate-----");
+
         board1.replaceGhost(LogicBoard.AND,"AND1", "GhostOf_OR1_0", "A", "B");
         System.out.println(board1.generateTruthTable());
 

@@ -22,6 +22,8 @@ public interface LogicBoardADT {
      */
     void addGate(String gate, String gateID, String input1, String input2);
 
+
+    void addGate(LogicBoard block, String gateID, ArrayList<String> inputs);
     /**
      * This method adds inputs to the logicboard (this helps the data determine the inputs when generating a truthTable)
      * @param gate the OOD (output only device to add to the logicboard)

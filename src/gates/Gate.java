@@ -110,9 +110,25 @@ public interface Gate {
      */
     void remove();
 
-    Gate getOutputTo(String gateID);
-
-    void removeOutputTo(String gateID);
-
     int findInput(Gate input);
+
+
+    /** FOR LogicBoard object use only!!!!
+     * This method returns this gates FIRST gate object input.
+     * @return the list of gate objects that inputs to this gate/Logic Block (think of it as a "previous" pointer in a link)
+     */
+    ArrayList<Gate> getBlockInputFrom();
+
+    /** FOR LogicBoard object use only!!!!
+     * This method sets the gate objecst that points to this gate/Logic Block as this gate's/Logic Block's inputs.
+     * @param input1From the list of input gates to this gate/Logic Block.
+     */
+    void setBlockInputFrom(ArrayList<Gate> input1From);
+
+    ArrayList<Gate> getSysOut();
+
+    ArrayList<Gate> getInputs();
+
+    ArrayList<Gate> getLogicBoard();
+
 }

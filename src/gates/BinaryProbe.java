@@ -85,15 +85,6 @@ public class BinaryProbe implements Gate, Serializable{
         this.input1From = null;
     }
 
-    @Override
-    public Gate getOutputTo(String gateID) {
-        return null;
-    }
-
-    @Override
-    public void removeOutputTo(String gateID) {
-
-    }
 
     @Override
     public int findInput(Gate input) {
@@ -106,6 +97,8 @@ public class BinaryProbe implements Gate, Serializable{
         }
         return in;
     }
+
+
 
 
     // N/A  \\
@@ -122,5 +115,30 @@ public class BinaryProbe implements Gate, Serializable{
     @Override
     public void setOutputTo(Gate outputTo) {
         //Not applicable
+    }
+    @Override
+    public ArrayList<Gate> getBlockInputFrom() {
+        //Not applicable
+        return null;
+    }
+
+    @Override
+    public void setBlockInputFrom(ArrayList<Gate> input1From) {
+        //Not applicable
+    }
+
+    @Override
+    public ArrayList<Gate> getSysOut() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Gate> getInputs() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Gate> getLogicBoard() {
+        return null;
     }
 }
