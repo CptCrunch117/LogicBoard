@@ -134,8 +134,13 @@ public class Or implements Gate, Serializable {
         return input1From;
     }
     public void setInput1From(Gate input1) {
-        input1.setOutputTo(this);
-        this.input1From = input1;
+        if(input1 != null) {
+            input1.setOutputTo(this);
+            this.input1From = input1;
+        }
+        else{
+
+        }
     }
 
     public Gate getInput2From() {
@@ -191,9 +196,6 @@ public class Or implements Gate, Serializable {
         return null;
     }
 
-    @Override
-    public ArrayList<Gate> getLogicBoard() {
-        return null;
-    }
+
 
 }

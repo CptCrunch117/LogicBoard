@@ -157,10 +157,6 @@ public class Ghost implements Gate, Serializable {
         return null;
     }
 
-    @Override
-    public ArrayList<Gate> getLogicBoard() {
-        return null;
-    }
 
 
 }

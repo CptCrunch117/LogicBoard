@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class OneBitFullAdder {
 
     public static void main(String[] args){
-
         //Create Exclusive or Logic Block
        /* String[] xorIN = {"A","B"};
         LogicBoard xOR = new LogicBoard(xorIN,"XOR");
@@ -60,7 +59,7 @@ public class OneBitFullAdder {
         fullAdder.addGate(LogicBoard.OR, "Cout", "AB", "(AB'+A'B)C");
 
         System.out.println("-----One bit Full adder-----");
-        //System.out.println(fullAdder.generateTruthTable());
+        System.out.println(fullAdder.generateTruthTable());
 
 
        ArrayList<String> out = new ArrayList<String>();
@@ -80,7 +79,7 @@ public class OneBitFullAdder {
       board.updateLogicBoard();
       System.out.println(board.generateTruthTable());
 
-
+//penis
     }
 
 }

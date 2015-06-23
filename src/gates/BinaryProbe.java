@@ -137,8 +137,5 @@ public class BinaryProbe implements Gate, Serializable{
         return null;
     }
 
-    @Override
-    public ArrayList<Gate> getLogicBoard() {
-        return null;
-    }
+
 }

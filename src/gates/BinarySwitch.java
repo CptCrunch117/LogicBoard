@@ -181,11 +181,6 @@ public class BinarySwitch implements Gate, Serializable
     }
 
     @Override
-    public ArrayList<Gate> getLogicBoard() {
-        return null;
-    }
-
-    @Override
     public Gate getInput2From() {
         return null;
     }

@@ -129,6 +129,4 @@ public interface Gate {
 
     ArrayList<Gate> getInputs();
 
-    ArrayList<Gate> getLogicBoard();
-
 }
