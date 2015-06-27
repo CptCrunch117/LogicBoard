@@ -3,7 +3,7 @@ This is a java console implementation of the LogicBoard project.
 It's purpose is for proof of concept. 
 Once completed it will be implemented as an application using GUI. 
 This project focuses on the data structure to handle creation,edits, and saves of a logicBoard project.
-All source code has been designed and implemented by Kyle Ferguson (Singularity Systems). 
+All source code has been designed and implemented by Kyle Ferguson Bride's new Studios). 
 This is kind of a private project
 
 
