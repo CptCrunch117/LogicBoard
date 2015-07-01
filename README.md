@@ -1,4 +1,5 @@
-This is a java console implementation of the  project.
+# LogicBoard
+This is a java console implementation of the LogicBoard project.
 It's purpose is for proof of concept. 
 Once completed it will be implemented as an application using GUI. 
 This project focuses on the data structure to handle creation,edits, and saves of a logicBoard project.
