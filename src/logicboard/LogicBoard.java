@@ -456,9 +456,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         else if (gate.equalsIgnoreCase("Not")) {
             createGate("not", gateID, inputOne, null);
         }
-        else if (gate.equalsIgnoreCase("binaryprobe")) {
-            createGate("binaryprobe", gateID, inputOne, null);
-        }
+
 
 
 

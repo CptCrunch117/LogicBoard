@@ -1,6 +1,8 @@
 package logicboard.boardbuilder;
 
 import logicboard.LogicBoard;
+import logicboard.boardbuilder.exceptions.NoInputExistsException;
+import logicboard.boardbuilder.exceptions.NoSuchLogicOperationException;
 import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
@@ -88,15 +90,32 @@ public class BoardTree<T> extends LinkedBinaryTree<String> {
      */
     private String buildGate(String gate, String in1, String in2){
         String gateID = null;
-
         if(gate.equalsIgnoreCase(LogicBoard.AND)){
-
+            gateID = "("+in1+gate+in2+")";
+            this.board.addGate(LogicBoard.AND,gateID,in1, in2);
         }
         else if(gate.equalsIgnoreCase(LogicBoard.OR)){
-
+            gateID = "("+in1+gate+in2+")";
+            this.board.addGate(LogicBoard.OR,gateID, in1, in2);
         }
         else if(gate.equalsIgnoreCase(LogicBoard.NOT)){
+            if(in1 == null){
+                if(in2 != null){
+                    gateID = "("+in2+gate+")";
+                    this.board.addGate(LogicBoard.NOT, gateID, in2, in1);
 
+                }
+                else{
+                    throw new NoInputExistsException(gate);
+                }
+            }
+            else {
+                gateID = "(" + in1 + gate + ")";
+                this.board.addGate(LogicBoard.NOT, gateID, in1, in2);
+            }
+        }
+        else{
+            throw new NoSuchLogicOperationException(gate);
         }
 
 
