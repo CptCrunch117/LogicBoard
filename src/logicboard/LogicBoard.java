@@ -1,7 +1,7 @@
-import Exceptions.*;
-import gates.And;
-import gates.*;
-import gates.Gate;
+package logicboard;
+
+import logicboard.Exceptions.*;
+import logicboard.gates.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * Created by Kyle Ferguson on 6/2/15.
  */
 public class LogicBoard implements LogicBoardADT, Serializable, Gate {
-    static final String AND = "and";
-    static final String NOT = "not";
-    static final String OR = "or";
+    public static final String AND = "and";
+    public static final String NOT = "not";
+    public static final String OR = "or";
 
 
     //Gate variables
@@ -143,14 +143,14 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
 
         for(Gate g : this.logicBoard){
-           if(g.getOutputTo().isEmpty()){
-               if(!find.contains(g)){
-                   find.add(g);
-               }
-           }
-           else {
-               seeker(g, find);
-           }
+            if(g.getOutputTo().isEmpty()){
+                if(!find.contains(g)){
+                    find.add(g);
+                }
+            }
+            else {
+                seeker(g, find);
+            }
         }
 
 
@@ -360,31 +360,31 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     private void createGate(String gate, String gateID, Gate input1, Gate input2){
 
 
-            if (gate.equalsIgnoreCase("AND")) {
+        if (gate.equalsIgnoreCase("AND")) {
 
-                if(gateID == null || input1 == null || input2 == null){
-                    throw new GateCreationException(this.gateID);
-                }
-                //add and gate
-                And and = new And(input1, input2, gateID);
-                allGates.add(and);
-                and.evaluateGate();
+            if(gateID == null || input1 == null || input2 == null){
+                throw new GateCreationException(this.gateID);
+            }
+            //add and gate
+            And and = new And(input1, input2, gateID);
+            allGates.add(and);
+            and.evaluateGate();
                     /*
                     gate.setGateID(gateID);
                     gate.setInput1From(inputOne);
                     gate.setInput2From(inputTwo);
                     gate.evaluateGate();
                     */
+        }
+        if (gate.equalsIgnoreCase("OR")) {
+            if(gateID == null || input1 == null || input2 == null){
+                throw new GateCreationException(this.gateID);
             }
-            if (gate.equalsIgnoreCase("OR")) {
-                if(gateID == null || input1 == null || input2 == null){
-                    throw new GateCreationException(this.gateID);
-                }
 
-                //add and gate
-                Or or = new Or(input1, input2, gateID);
-                allGates.add(or);
-                or.evaluateGate();
+            //add and gate
+            Or or = new Or(input1, input2, gateID);
+            allGates.add(or);
+            or.evaluateGate();
                     /*
                     gate.setGateID(gateID);
                     gate.setInput1From(inputOne);
@@ -392,26 +392,26 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
                     gate.evaluateGate();
                     */
 
-            } else if (gate.equalsIgnoreCase("NOT")) {
-                if(gateID == null || input1 == null ){
-                    throw new GateCreationException(this.gateID);
-                }
-                //add not gate
-                Not not = new Not(input1, gateID);
-                allGates.add(not);
-                not.evaluateGate();
-
-
-            } else if (gate.equalsIgnoreCase("BinaryProbe")) {
-
-                BinaryProbe probe = new BinaryProbe(input1, gateID);
-                allGates.add(probe);
-                probe.setOutputTo(null);
-
-
+        } else if (gate.equalsIgnoreCase("NOT")) {
+            if(gateID == null || input1 == null ){
+                throw new GateCreationException(this.gateID);
             }
+            //add not gate
+            Not not = new Not(input1, gateID);
+            allGates.add(not);
+            not.evaluateGate();
 
-}
+
+        } else if (gate.equalsIgnoreCase("BinaryProbe")) {
+
+            BinaryProbe probe = new BinaryProbe(input1, gateID);
+            allGates.add(probe);
+            probe.setOutputTo(null);
+
+
+        }
+
+    }
 
 
     @Override
@@ -447,18 +447,18 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         }
 
 
-            if (gate.equalsIgnoreCase("And")) {
-                    createGate("and", gateID, inputOne, inputTwo);
-            }
-            else if (gate.equalsIgnoreCase("Or")) {
-                    createGate("or", gateID, inputOne, inputTwo);
-            }
-            else if (gate.equalsIgnoreCase("Not")) {
-                    createGate("not", gateID, inputOne, null);
-            }
-            else if (gate.equalsIgnoreCase("binaryprobe")) {
-                    createGate("binaryprobe", gateID, inputOne, null);
-            }
+        if (gate.equalsIgnoreCase("And")) {
+            createGate("and", gateID, inputOne, inputTwo);
+        }
+        else if (gate.equalsIgnoreCase("Or")) {
+            createGate("or", gateID, inputOne, inputTwo);
+        }
+        else if (gate.equalsIgnoreCase("Not")) {
+            createGate("not", gateID, inputOne, null);
+        }
+        else if (gate.equalsIgnoreCase("binaryprobe")) {
+            createGate("binaryprobe", gateID, inputOne, null);
+        }
 
 
 
@@ -512,8 +512,8 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
 
     public ArrayList<Gate> getOutputs(){
-    return this.openOutputs;
-}
+        return this.openOutputs;
+    }
 
 
     @Override
@@ -608,7 +608,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
 
         for(int i=0; i < truthTable.length; i++){
-                table += "\n";
+            table += "\n";
 
             int labelInc=0;
             for(int j = 0; j < truthTable[0].length; j++){
@@ -643,7 +643,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         if(remove.getGateType().equalsIgnoreCase("AND") || remove.getGateType().equalsIgnoreCase("OR")){
 
             for(int i=0; i < remove.getOutputTo().size(); i++){
-            Ghost ghost1 = new Ghost(remove.getInput1From(),remove.getInput2From(), remove.getOutputTo().get(i), "GhostOf_"+remove.getGateID()+"_"+i);
+                Ghost ghost1 = new Ghost(remove.getInput1From(),remove.getInput2From(), remove.getOutputTo().get(i), "GhostOf_"+remove.getGateID()+"_"+i);
                 int inputPos = remove.getOutputTo().get(i).findInput(remove);
                 if(inputPos == 1){
                     remove.getOutputTo().get(i).setInput1From(ghost1);
@@ -670,10 +670,10 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
                 }
 
                 allGates.add(ghost);
-                }
+            }
             allGates.remove(remove);
             remove.remove();
-            }
+        }
 
 
         this.openOutputs = findOpenOutputs();
@@ -763,7 +763,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     private void transferOutputTo(Gate tTO, Gate tFROM){
         if(!tFROM.getOutputTo().isEmpty()){
             //for(int i =0; i < tFROM.getOutputTo().size();i++){
-                tTO.setOutputTo(tFROM.getOutputTo().get(0));
+            tTO.setOutputTo(tFROM.getOutputTo().get(0));
             //}
             int inputPos = tFROM.getOutputTo().get(0).findInput(tFROM);
             if(inputPos == 1){
@@ -867,8 +867,8 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
                     Gate input1;
                     Gate input2;
                     try{
-                    input1 = findGate(input1_nameID);
-                    input2 = findGate(input2_nameID);
+                        input1 = findGate(input1_nameID);
+                        input2 = findGate(input2_nameID);
                     }catch(NoSuchGateException e){
                         throw new ReplaceGhostException(ghost.getGateID());
                     }

@@ -1,4 +1,4 @@
-import gates.Gate;
+import logicboard.LogicBoard;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class OneBitFullAdder {
 
     public static void main(String[] args){
+
         //Create Exclusive or Logic Block
        /* String[] xorIN = {"A","B"};
         LogicBoard xOR = new LogicBoard(xorIN,"XOR");
@@ -79,7 +80,7 @@ public class OneBitFullAdder {
       board.updateLogicBoard();
       System.out.println(board.generateTruthTable());
 
-//penis
+
     }
 
 }

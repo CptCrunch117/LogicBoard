@@ -1,6 +1,4 @@
-package gates;
-
-import Exceptions.NoSuchGateException;
+package logicboard.gates;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,67 +1,63 @@
-package gates;
-
-import Exceptions.NoSuchGateException;
+package logicboard.gates;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by Kyle Ferguson on 5/31/2015.
+ * Created by Kyle Ferguson on 5/10/2015.
  */
-public class Or implements Gate, Serializable {
-
+public class And implements Gate, Serializable{
 
     private int output;
+    private String nameID;
     private ArrayList<Gate> outputTos;
     private Gate input1From;
     private Gate input2From;
-    private String nameID;
     private final String TYPE = "IAOD";
-    private final String GATE = "OR";
+    private final String GATE = "AND";
     /**
      * Args Constructor, Takes in the to initial inputs and determines output
      * @param input1From
      * @param input2From
      */
-    public Or(Gate input1From, Gate input2From){
+    public And(Gate input1From, Gate input2From){
         this.outputTos = new ArrayList<Gate>();
+        setInput1From(input1From);
+        setInput2From(input2From);
         setGateID(null);
+        evaluateGate();
+    }
+
+    public And(Gate input1From, Gate input2From, String nameID){
+        this.outputTos = new ArrayList<Gate>();
+        setGateID(nameID);
         setInput1From(input1From);
         setInput2From(input2From);
         evaluateGate();
     }
 
-    public Or(Gate input1From, Gate input2From, String nameID){
-        this.outputTos = new ArrayList<Gate>();
+    public And(String nameID){
         setGateID(nameID);
-        setInput1From(input1From);
-        setInput2From(input2From);
+        setOutputTo(null);
+        setInput1From(null);
+        setInput2From(null);
         evaluateGate();
     }
     /**
      * No-Args constructor, when an AND gate is created with  no inputs.
      */
-    public Or(){
-        this.outputTos = new ArrayList<Gate>();
-        setGateID(null);
+    public And(){
         setInput1From(null);
         setInput2From(null);
         evaluateGate();
     }
 
-    public Or(String nameID){
-        this.outputTos = new ArrayList<Gate>();
-        setGateID(nameID);
-        setInput1From(null);
-        setInput2From(null);
-        evaluateGate();
-    }
     public void evaluateGate(){
 
         if(getInput1() == 2 || getInput2() == 2 ){
             setOutput(2);
         }
-        else if(getInput1() == 1 || getInput2()== 1){
+        else if(getInput1() == 1 && getInput2()== 1){
             setOutput(1);
         }
         else{
@@ -73,7 +69,6 @@ public class Or implements Gate, Serializable {
     public String getGateID() {
         return this.nameID;
     }
-
     @Override
     public void setGateID(String nameID) {
         this.nameID = nameID;
@@ -88,7 +83,6 @@ public class Or implements Gate, Serializable {
         return this.GATE;
     }
 
-
     @Override
     public synchronized int getOutput() {
         evaluateGate();
@@ -98,8 +92,7 @@ public class Or implements Gate, Serializable {
         this.output = output;
     }
 
-
-    private synchronized int getInput1() {
+    private  synchronized int getInput1() {
         int input1 = 0;
         if(getInput1From() != null){
             input1 = getInput1From().getOutput();
@@ -111,7 +104,7 @@ public class Or implements Gate, Serializable {
         return input1;
     }
     private synchronized int getInput2() {
-        int input2 = 0;
+       int input2 = 0;
         if(getInput2From() != null){
             input2 = getInput2From().getOutput();
         }
@@ -126,6 +119,7 @@ public class Or implements Gate, Serializable {
     public ArrayList<Gate> getOutputTo() {
         return this.outputTos;
     }
+
     public void setOutputTo(Gate outputTo) {
         this.outputTos.add(outputTo);
     }
@@ -134,13 +128,9 @@ public class Or implements Gate, Serializable {
         return input1From;
     }
     public void setInput1From(Gate input1) {
-        if(input1 != null) {
-            input1.setOutputTo(this);
-            this.input1From = input1;
-        }
-        else{
+        input1.setOutputTo(this);
 
-        }
+        this.input1From = input1;
     }
 
     public Gate getInput2From() {
@@ -150,19 +140,6 @@ public class Or implements Gate, Serializable {
         input2.setOutputTo(this);
         this.input2From = input2;
     }
-
-    @Override
-    public int findInput(Gate input){
-        int in = 0;
-        if(getInput1From().getGateID().equalsIgnoreCase(input.getGateID())){
-            in = 1;
-        }
-        else if(getInput2From().getGateID().equalsIgnoreCase(input.getGateID())){
-            in = 2;
-        }
-        return in;
-    }
-
 
     public void remove(){
         this.outputTos = null;
@@ -174,8 +151,21 @@ public class Or implements Gate, Serializable {
 
 
 
-    //-----Not Applicable-----\\
+    @Override
+    public int findInput(Gate input) {
+        int in = 0;
+        if(getInput1From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 1;
+        }
+        else if(getInput2From().getGateID().equalsIgnoreCase(input.getGateID())){
+            in = 2;
+        }
+        return in;
+    }
 
+
+
+    //-----Not Applicable-----\\
     @Override
     public ArrayList<Gate> getBlockInputFrom() {
         return null;
@@ -195,7 +185,6 @@ public class Or implements Gate, Serializable {
     public ArrayList<Gate> getInputs() {
         return null;
     }
-
 
 
 }

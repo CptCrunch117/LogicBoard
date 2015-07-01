@@ -1,3 +1,5 @@
+import logicboard.LogicBoard;
+
 import java.util.Scanner;
 
 /**

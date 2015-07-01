@@ -1,4 +1,4 @@
-package Exceptions;
+package logicboard.Exceptions;
 
 /**
  * Created by CptAmerica on 6/22/15.

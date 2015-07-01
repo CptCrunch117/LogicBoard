@@ -1,4 +1,6 @@
-import gates.Gate;
+package logicboard;
+
+import logicboard.gates.Gate;
 
 import java.util.ArrayList;
 

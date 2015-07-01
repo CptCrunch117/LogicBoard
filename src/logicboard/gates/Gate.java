@@ -1,4 +1,4 @@
-package gates;
+package logicboard.gates;
 
 import java.util.ArrayList;
 

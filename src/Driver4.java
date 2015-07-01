@@ -1,6 +1,4 @@
-import gates.Gate;
-
-import java.util.ArrayList;
+import logicboard.LogicBoard;
 
 /**
  * Created by CptAmerica on 6/14/15.

@@ -1,4 +1,4 @@
-package Exceptions;
+package logicboard.Exceptions;
 
 /**
  * Created by Kyle Ferguson on 6/2/15.
