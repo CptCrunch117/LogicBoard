@@ -80,10 +80,10 @@ Console Output of OneBitFullAdder class:
 Process finished with exit code 0
 
 <h2>Update 1</h2>
-As of now a clean up and error catching process is being done on the data structure.
-Once done Logic blocking, object saving and cloning will be implemented. This will allow 
-for saving of LogicBoards (blocks) and when deserialized multiple copies can be made so you can
-have mulitple logic blocks with the same logic from the saved version althroughout any other logic board.
+    As of now a clean up and error catching process is being done on the data structure.
+    Once done Logic blocking, object saving and cloning will be implemented. This will allow 
+    for saving of LogicBoards (blocks) and when deserialized multiple copies can be made so you can
+    have mulitple logic blocks with the same logic from the saved version althroughout any other logic board.
 
 <h2>Update 2</h2>
     Alright as of now new exceptions have been created for certain error occurances in the data structure. 
