@@ -80,19 +80,39 @@ Console Output of OneBitFullAdder class:
 Process finished with exit code 0
 
 <h2>Update 1</h2>
-As of now a clean up and error catching process is being done on the data structure.
-Once done Logic blocking, object saving and cloning will be implemented. This will allow 
-for saving of LogicBoards (blocks) and when deserialized multiple copies can be made so you can
-have mulitple logic blocks with the same logic from the saved version althroughout any other logic board.
+    As of now a clean up and error catching process is being done on the data structure.
+    Once done Logic blocking, object saving and cloning will be implemented. This will allow 
+    for saving of LogicBoards (blocks) and when deserialized multiple copies can be made so you can
+    have mulitple logic blocks with the same logic from the saved version althroughout any other logic board.
 
 <h2>Update 2</h2>
-    Alright as of now new exceptions have been created for certain error occurances in the data structure. Clean up is
-    as always underway. Also Designs for new functions are being made.(hint hint circuit simplification tools :D). However as
-    testing continues I have started designing some much needed functions to make building boards more intuitive based on 
-    some not so intuitive processes I designed earlier. Logicboards can be saved and cloned. LogicBoards implemented
-    into other logicboards now act as a gate object as they now implement the Gate interface. Logicboards also allow you
-    to rename it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
-    Might add some addition features for that. This is probably the biggest update... mainly cause I have been lazy
-    and haven't been logging the commits made since update 1. In any case, feel free to look at the code friends. 
-    Please notify me before using code, alot of time has been spent on this...also becuase it's far from done.
+    Alright as of now new exceptions have been created for certain error occurances in the data structure. 
+    Clean up is as always underway. Also Designs for new functions are being made.(hint hint circuit 
+    simplification tools :D). However as testing continues I have started designing some much needed
+    functions to make building boards more intuitive based on some not so intuitive processes I 
+    designed earlier. Logicboards can be saved and cloned. LogicBoards implemented into other logicboards
+    now act as a gate object as they now implement the Gate interface. Logicboards also allow you to rename 
+    it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
+    Might add some addition features for that. This is probably the biggest update... mainly cause I have 
+    been lazy and haven't been logging the commits made since update 1. In any case, feel free to look at 
+    the code friends. Please notify me before using code, alot of time has been spent on this...also becuase
+    it's far from done.
+    
+<h2>Update 3</h2>
+    Hey what's up guys!? Back for another update to the source code. Alright so first off I totally did an 
+    overhaul to the folder structure of the project. This makes it emensely better as the structure of the 
+    program is more clear and easier to understand. Next up is the beginning of the implementation of a
+    sort-of sub project. I started designing and implementing some code that should be able to parse a 
+    boolean expression, build a binary tree from it, and finally, based on the structure of the tree,
+    build a logic board from the expression. This class that does this can take as many expressions and
+    build logic based on it with the same board. The drawback is that the boolean expression can only
+    contain values of the BOARDS INITIAL INPUTS. Each boolean expression only yeilds one ouput. Say you
+    have a board with inputs of A, B, C, and D. We want it to output (A'+B*C) and have another 
+    output: (D*C*A). Well the answer is staring us in the face! We would simply add those two expressions
+    to a BoardTree objects list of expressions! The reason this works is becuase a gate can theoretically
+    ouput TO an infinite number of inputs. The next thing I am going to work on is testing, debugging, and 
+    of course fixing this new implementation. The next thing I want to work on is a SMART parser that can
+    correct small/simple errors in the expression passed before parsing.
+    (adding spaces, checking parentheses, etc.) Well thats it for this update message, thanks for reading and
+    following!
 
