@@ -77,7 +77,7 @@ public class BoardTree<T> extends LinkedBinaryTree<String> {
             }
         }
 
-        return result;//CHANGE
+        return result;
     }
 
     /**
@@ -119,7 +119,7 @@ public class BoardTree<T> extends LinkedBinaryTree<String> {
         }
 
 
-        return gateID;//CHANGE
+        return gateID;
     }
 
     /**
@@ -151,6 +151,13 @@ public class BoardTree<T> extends LinkedBinaryTree<String> {
     }
 
 
+    public LogicBoard getBoard(){
+        return this.board;
+    }
+
+    public void setBoard(LogicBoard bd){
+        this.board = bd;
+    }
 
 
 
