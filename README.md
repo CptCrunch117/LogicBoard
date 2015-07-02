@@ -86,13 +86,28 @@ for saving of LogicBoards (blocks) and when deserialized multiple copies can be 
 have mulitple logic blocks with the same logic from the saved version althroughout any other logic board.
 
 <h2>Update 2</h2>
-    Alright as of now new exceptions have been created for certain error occurances in the data structure. Clean up is
-    as always underway. Also Designs for new functions are being made.(hint hint circuit simplification tools :D). However as
-    testing continues I have started designing some much needed functions to make building boards more intuitive based on 
-    some not so intuitive processes I designed earlier. Logicboards can be saved and cloned. LogicBoards implemented
-    into other logicboards now act as a gate object as they now implement the Gate interface. Logicboards also allow you
-    to rename it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
-    Might add some addition features for that. This is probably the biggest update... mainly cause I have been lazy
-    and haven't been logging the commits made since update 1. In any case, feel free to look at the code friends. 
-    Please notify me before using code, alot of time has been spent on this...also becuase it's far from done.
+    Alright as of now new exceptions have been created for certain error occurances in the data structure. 
+    Clean up is as always underway. Also Designs for new functions are being made.(hint hint circuit 
+    simplification tools :D). However as testing continues I have started designing some much needed
+    functions to make building boards more intuitive based on some not so intuitive processes I 
+    designed earlier. Logicboards can be saved and cloned. LogicBoards implemented into other logicboards
+    now act as a gate object as they now implement the Gate interface. Logicboards also allow you to rename 
+    it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
+    Might add some addition features for that. This is probably the biggest update... mainly cause I have 
+    been lazy and haven't been logging the commits made since update 1. In any case, feel free to look at 
+    the code friends. Please notify me before using code, alot of time has been spent on this...also becuase
+    it's far from done.
+    
+<h2>Update 3</h2>
+    Alright as of now new exceptions have been created for certain error occurances in the data structure. 
+    Clean up is as always underway. Also Designs for new functions are being made.(hint hint circuit 
+    simplification tools :D). However as testing continues I have started designing some much needed
+    functions to make building boards more intuitive based on some not so intuitive processes I 
+    designed earlier. Logicboards can be saved and cloned. LogicBoards implemented into other logicboards
+    now act as a gate object as they now implement the Gate interface. Logicboards also allow you to rename 
+    it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
+    Might add some addition features for that. This is probably the biggest update... mainly cause I have 
+    been lazy and haven't been logging the commits made since update 1. In any case, feel free to look at 
+    the code friends. Please notify me before using code, alot of time has been spent on this...also becuase
+    it's far from done.
 
