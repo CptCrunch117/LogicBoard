@@ -1,12 +1,15 @@
 package logicboard.boardbuilder;
 
+import logicboard.LogicBoard;
+
 /**
  * Created by CptAmerica on 7/2/15.
  */
 public class BoardTreeBuilder {
 
 
-    public void buildTree(String exprs, String[] inputs, String boardName){
+
+    public LogicBoard buildTree(String exprs, String[] inputs, String boardName){
         BoardTree<String> tree = new BoardTree<String>(inputs,boardName);
         BinaryNode<String> temp = tree.root;
 
@@ -39,24 +42,27 @@ public class BoardTreeBuilder {
                 temp.setElement("'");
             }
 
-            //IF GateID
+
             else{
+                //IF GateID
+                System.out.println("Char: "+s);
                 if(temp.getLeftChild() == null){
                     temp.setLeftChild(new BinaryNode(temp));
                     temp.getLeftChild().setElement(s);
                 }
                 else{
                     if(temp.getRightChild() == null){
-                        temp.setLeftChild(new BinaryNode(temp));
+                        temp.setRightChild(new BinaryNode(temp));
                         temp.getRightChild().setElement(s);
                     }
                 }
             }
         }
 
-
+        tree.evaluateTree();
+        //System.out.println("Board output gateID: "+exprsOutput);
+        return tree.getBoard();
     }
-
 
 
 }
