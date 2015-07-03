@@ -8,18 +8,15 @@ public class exprsDriver {
 
     public static void main(String[] args){
 
-        String expression = "( A * B ) + ( A * B ) ";
-        String expression1 = "A + B";
-
+        String expression = "( ( A * B ) + ( A * B ) ) * C";
+        String xor_expression = "( ( A ' ) * B ) + ( A * ( B ' ) )";
         String[] inputs = {"A", "B"};
         BoardTreeBuilder builder = new BoardTreeBuilder();
-
-        LogicBoard xor = builder.buildTree(expression, inputs, "XOR");
-
+        LogicBoard xor = builder.buildTree(xor_expression, inputs, "XOR");
         xor.printGates();
+        System.out.println(xor.generateTruthTable());
 
-
-
+        //
     }
 
 }
