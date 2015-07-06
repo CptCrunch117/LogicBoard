@@ -7,6 +7,7 @@ import logicboard.boardbuilder.exceptions.NoSuchLogicOperationException;
 import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by CptAmerica on 7/1/15.
@@ -106,33 +107,35 @@ public class BoardTree<T> extends LinkedBinaryTree<String> {
      */
     private String buildGate(String gate, String in1, String in2){
         String gateID = null;
+
+        //Try and create a gate based on the gate type and input. However if the gate ID aka the gate object
+        //with the same logic already exists then a GateIDExistsException will be thrown, in which case we
+        //just pass the name of the already existing gateID and do not create another gate, this increases
+        //Gate efficiency and reuse in the auto generation of the LogicBoard.
         if(gate.equalsIgnoreCase(LogicBoard.AND)){
-            gateID = "("+in1+gate+in2+""+andTally+")";
-            andTally++;
+            gateID = "("+in1+gate+in2+")";
             try {
                 this.board.addGate(LogicBoard.AND, gateID, in1, in2);
             }catch(GateIDExistsException e){
-
+                gateID = "("+in1+gate+in2+")";
             }
         }
         else if(gate.equalsIgnoreCase(LogicBoard.OR)){
-            gateID = "("+in1+gate+in2+""+orTally+")";
-            orTally++;
+            gateID = "("+in1+gate+in2+")";
             try {
                 this.board.addGate(LogicBoard.OR, gateID, in1, in2);
             }catch(GateIDExistsException e){
-
+                gateID = "("+in1+gate+in2+")";
             }
         }
         else if(gate.equalsIgnoreCase(LogicBoard.NOT)){
             if(in1 == null){
                 if(in2 != null){
-                    gateID = "("+in2+gate+""+notTally+")";
-                    notTally++;
+                    gateID = "("+in2+gate+")";
                     try {
                         this.board.addGate(LogicBoard.NOT, gateID, in2, in1);
                     }catch(GateIDExistsException e){
-
+                        gateID = "("+in2+gate+")";
                     }
 
                 }
@@ -141,8 +144,12 @@ public class BoardTree<T> extends LinkedBinaryTree<String> {
                 }
             }
             else {
-                gateID = "(" + in1 + gate + ")";
-                this.board.addGate(LogicBoard.NOT, gateID, in1, in2);
+                gateID = "("+in1+gate+")";
+                try {
+                    this.board.addGate(LogicBoard.NOT, gateID, in1, in2);
+                }catch(GateIDExistsException e){
+                    gateID = "("+in1+gate+")";
+                }
             }
         }
         else{

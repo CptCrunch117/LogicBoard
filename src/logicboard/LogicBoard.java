@@ -137,7 +137,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     }
 
 
-    @Override
+
     public ArrayList<Gate> findOpenOutputs() {
         ArrayList<Gate> find = new ArrayList<Gate>();
 
@@ -414,7 +414,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     }
 
 
-    @Override
+
     public void addGate(String gate, String gateID, String input1_nameID, String input2_nameID) {
         //Update openOuput list after adding
         this.openOutputs = findOpenOutputs();
@@ -465,7 +465,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         updateIODList();
     }
 
-    @Override
+
     public void addGate(LogicBoard block, String gateID, ArrayList<String> inputs){
         this.blocks.add(block);
 
@@ -497,7 +497,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         updateIODList();
     }
 
-    @Override
+
     public void addOOD(Gate gate) {
         if(gate.getDeviceType().equalsIgnoreCase("OOD")) {
             this.logicBoard.add(gate);
@@ -513,8 +513,10 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         return this.openOutputs;
     }
 
+    public ArrayList<Gate> getOpenOutputs(){
+        return findOpenOutputs();
+    }
 
-    @Override
     public String generateTruthTable() {
 
         double inputSize = this.logicBoard.size();
@@ -633,7 +635,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         return table;
     }
 
-    @Override
+
     public void removeGate(String gateID) {
         Gate remove = findGate(gateID);
 
@@ -678,7 +680,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
     }
 
-    @Override
+
     public void setSystemOutputs(ArrayList<String> gateIDs) {
         int count = 0;
         boolean isSet = true;
@@ -703,12 +705,12 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         }
     }
 
-    @Override
+
     public ArrayList<Gate> getSystemOutputs() {
         return this.sysOut;
     }
 
-    @Override
+
     public void insertLogicBlock(ArrayList<String> gateIN, LogicBoard block) {
         //temp arrayList to hold all found open input gates
         ArrayList<Gate> outputs = new ArrayList<Gate>();
@@ -1029,7 +1031,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
     //----------GATE IMPLEMENTATION----------\\
 
-    @Override
+
     public void evaluateGate() {
 
         //Update input values
@@ -1050,26 +1052,26 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         this.updateLogicBoard();
     }
 
-    @Override
+
     public String getGateID() {
         return this.gateID;
     }
 
-    @Override
+
     public void setGateID(String nameID) {
         this.gateID = nameID;
     }
 
-    @Override
+
     public String getDeviceType() {
         return this.TYPE;
     }
 
-    @Override
+
     public String getGateType() {
         return this.logicBoardName;
     }
-    @Override
+
     public void remove() {
 
         //remove reference of the outputs
@@ -1083,7 +1085,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         //NOTE: GC will pick up soon as no reference to this object exists and it is not being used.
     }
 
-    @Override
+
     public int findInput(Gate input) {
 
         for(Gate g : this.inputs){
@@ -1097,12 +1099,12 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         return 0;
     }
 
-    @Override
+
     public ArrayList<Gate> getBlockInputFrom() {
         return this.inputs;
     }
 
-    @Override
+
     public void setBlockInputFrom(ArrayList<Gate> input1From) {
         if(this.logicBoard.size() == input1From.size()){
 
@@ -1125,7 +1127,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         return this.sysOut;
     }
 
-    @Override
+
     public ArrayList<Gate> getInputs() {
         return this.logicBoard;
     }
@@ -1136,40 +1138,40 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
 
     //-----NA-----\\
-    @Override
+
     public Gate getInput2From() {
         return null;
     }
 
-    @Override
+
     public void setInput2From(Gate input2From) {
 
     }
-    @Override
+
     public void setOutput(int output) {
 
     }
 
 
-    @Override
+
     public Gate getInput1From() {
         return null;
     }
 
-    @Override
+
     public void setInput1From(Gate input1From) {
 
     }
-    @Override
+
     public void setOutputTo(Gate outputTo) {
 
 
     }
-    @Override
+
     public ArrayList<Gate> getOutputTo() {
         return null;
     }
-    @Override
+
     public int getOutput() {
         return 0;
     }

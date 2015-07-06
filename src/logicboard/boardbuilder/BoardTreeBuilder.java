@@ -7,6 +7,10 @@ import logicboard.LogicBoard;
  */
 public class BoardTreeBuilder {
 
+    public static void main(String[] args){
+        BoardTreeBuilder build = new BoardTreeBuilder();
+        System.out.println(build.expressionCheck("( C ' )"));
+    }
 
     public LogicBoard buildTree(String exprs, LogicBoard bd){
         BoardTree<String> tree = new BoardTree<String>(bd);
@@ -66,8 +70,8 @@ public class BoardTreeBuilder {
         BoardTree<String> tree = new BoardTree<String>(inputs,boardName);
         BinaryNode<String> temp = tree.root;
 
-
         for(String s : exprs.split(" ")){
+
             if(s.equalsIgnoreCase("(")){
                 if(temp.getLeftChild() == null){
                     //Instantiate right child, pass in reference to it's parent
@@ -117,4 +121,18 @@ public class BoardTreeBuilder {
     }
 
 
+    public String expressionCheck(String expression){
+        if(expression.charAt(0) == '(' && expression.charAt(expression.length()-1) == ')'){
+            expression = expression.substring(1,expression.length());
+            expression = expression.substring(0,expression.length()-1);
+        }
+        if(expression.charAt(0) == ' ' && expression.charAt(expression.length()-1) == ' '){
+            expression = expression.substring(1,expression.length());
+            expression = expression.substring(0,expression.length()-1);
+        }
+
+
+
+        return expression;//Change!
+    }
 }

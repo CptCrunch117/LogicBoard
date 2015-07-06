@@ -10,20 +10,21 @@ public class OneBitFullAdder {
     public static void main(String[] args){
 
         //Create Exclusive or Logic Block
-       /* String[] xorIN = {"A","B"};
+        String[] xorIN = {"A","B"};
         LogicBoard xOR = new LogicBoard(xorIN,"XOR");
-        xOR.addGate(LogicBoard.NOT,"B'","B",null, 0, 0);
-        xOR.addGate(LogicBoard.AND,"AB'","A","B'",0, 0);
+        xOR.addGate(LogicBoard.NOT,"B'","B",null);
+        xOR.addGate(LogicBoard.AND,"AB'","A","B'");
 
         xOR.printGates();
 
-        xOR.addGate(LogicBoard.NOT,"A'","A",null, 0, 0);
-        xOR.addGate(LogicBoard.AND,"A'B","A'","B", 0, 0);
+        xOR.addGate(LogicBoard.NOT,"A'","A",null);
+        xOR.addGate(LogicBoard.AND,"A'B","A'","B");
 
-        xOR.addGate(LogicBoard.OR,"AB'+A'B","A'B","AB'", 0, 0);
+        xOR.addGate(LogicBoard.OR,"AB'+A'B","A'B","AB'");
 
-        System.out.println(xOR.generateTruthTable());
-        */
+
+        //System.out.println(xOR.generateTruthTable());
+
 
         String[] inputs = {"A","B","Cin"};
         LogicBoard fullAdder = new LogicBoard(inputs, "OneBitAdder");
