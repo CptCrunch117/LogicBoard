@@ -51,9 +51,9 @@ public class TwoBitCompExample {
         rename.add("A>B");
         rename.add("A=B");
         rename.add("A<B");
-        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(0).getGateID(),"A>B");
+        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(2).getGateID(),"A>B");
         jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(1).getGateID(),"A=B");
-        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(2).getGateID(),"A<B");
+        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(0).getGateID(),"A<B");
         //-----------------------------------------------------------
 
         //Print Stuffs Phase
@@ -154,7 +154,7 @@ Gate ((B0and(A1not))and(B1not)):
 Gate ((A0and(A1not))or((B0and(A1not))and(B1not))):
 	input1: (A0and(A1not))
 	input2: ((B0and(A1not))and(B1not))
-	outputTo: A>B
+	outputTo: A<B
 
 Gate (A0andB0):
 	input1: A0
@@ -164,9 +164,9 @@ Gate (A0andB0):
 Gate ((A0andB0)and(B1not)):
 	input1: (A0andB0)
 	input2: (B1not)
-	outputTo: A>B
+	outputTo: A<B
 
-Gate A>B:
+Gate A<B:
 	input1: ((A0and(A1not))or((B0and(A1not))and(B1not)))
 	input2: ((A0andB0)and(B1not))
 	outputTo: A
@@ -203,7 +203,7 @@ Gate (((A0not)and(B0not))andB1):
 Gate (((A0not)andA1)or(((A0not)and(B0not))andB1)):
 	input1: ((A0not)andA1)
 	input2: (((A0not)and(B0not))andB1)
-	outputTo: A<B
+	outputTo: A>B
 
 Gate ((B0not)andA1):
 	input1: (B0not)
@@ -213,9 +213,9 @@ Gate ((B0not)andA1):
 Gate (((B0not)andA1)andB1):
 	input1: ((B0not)andA1)
 	input2: B1
-	outputTo: A<B
+	outputTo: A>B
 
-Gate A<B:
+Gate A>B:
 	input1: (((A0not)andA1)or(((A0not)and(B0not))andB1))
 	input2: (((B0not)andA1)andB1)
 	outputTo: B
@@ -223,9 +223,9 @@ Gate A<B:
 	outputTo: B
 
 Gate XOR:
-	Inputs: A>B
-
 	Inputs: A<B
+
+	Inputs: A>B
 
 	outputTo: A=B
 
@@ -246,7 +246,7 @@ B0
 ((A0and(A1not))or((B0and(A1not))and(B1not)))
 (A0andB0)
 ((A0andB0)and(B1not))
-A>B
+A<B
 (A0not)
 ((A0not)andA1)
 (B0not)
@@ -255,13 +255,13 @@ A>B
 (((A0not)andA1)or(((A0not)and(B0not))andB1))
 ((B0not)andA1)
 (((B0not)andA1)andB1)
-A<B
+A>B
 XOR
 A=B
 
 Truth table of 2BitComp LogicBoard:
 -----------------------------------
-A1	A0	B1	B0	|	A>B	A=B	A<B
+A1	A0	B1	B0	|	A<B	A=B	A>B
 0	0	0	0		0	1	0
 0	0	0	1		1	0	0
 0	0	1	0		0	0	1
@@ -278,6 +278,4 @@ A1	A0	B1	B0	|	A>B	A=B	A<B
 1	1	0	1		1	0	0
 1	1	1	0		0	0	1
 1	1	1	1		0	1	0
-
-Process finished with exit code 0
  */
