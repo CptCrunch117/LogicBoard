@@ -29,7 +29,6 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     private ArrayList<Gate> logicBoard;             //Keeps track of System inputs
     private ArrayList<Gate> openInputs;             //Keeps track of gates with null inputs
     private ArrayList<Gate> openOutputs;            //Keeps track of gates with null OutputTo's
-    private ArrayList<Gate> iods;                   //keeps track of open input only devices
     private ArrayList<Gate> allGates;       //List of all existing gates in logicboard object.
     private ArrayList<Gate> sysOut;
     private ArrayList<LogicBoard> blocks;
@@ -40,7 +39,6 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         this.openOutputs = new ArrayList<Gate>();
         this.openInputs = new ArrayList<Gate>();
         this.allGates = new ArrayList<Gate>();
-        this.iods = new ArrayList<Gate>();
         this.sysOut = new ArrayList<Gate>();
         this.blocks = new ArrayList<LogicBoard>();
         this.openOutputs = findOpenOutputs();
@@ -48,7 +46,6 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         this.inputs = new ArrayList<Gate>();
         this.outputs = new ArrayList<Gate>();
         this.blocks = new ArrayList<LogicBoard>();
-        updateIODList();
     }
 
 
@@ -60,7 +57,6 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         this.openOutputs = new ArrayList<Gate>();
         this.openInputs = new ArrayList<Gate>();
         this.allGates = new ArrayList<Gate>();
-        this.iods = new ArrayList<Gate>();
         this.sysOut = new ArrayList<Gate>();
         this.inputs = new ArrayList<Gate>();
         this.outputs = new ArrayList<Gate>();
@@ -72,10 +68,17 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         this.openOutputs = findOpenOutputs();
         this.logicLock = false;
         this.blocks = new ArrayList<LogicBoard>();
-        updateIODList();
     }
 
 
+    public static LogicBoard getBoard(String lib, String fileName) throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(lib+fileName+".ser");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        LogicBoard temp = (LogicBoard) ois.readObject();
+        fis.close();
+        ois.close();
+        return temp;
+    }
 
     public LogicBoard cloneBoard(String gateID){
         LogicBoard clone = null;
@@ -136,6 +139,9 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
     }
 
+    public ArrayList<Gate> getAllGates(){
+        return this.allGates;
+    }
 
 
     public ArrayList<Gate> findOpenOutputs() {
@@ -323,38 +329,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         return found;
     }
 
-    /**
-     * This method updates the list of Input Only Devices
-     */
-    private void updateIODList(){
-        ArrayList<Gate> iods = new ArrayList<Gate>();
 
-        for(Gate g : this.openOutputs){
-            if(g.getGateType().equalsIgnoreCase("IOD")){
-                iods.add(g);
-            }
-        }
-        this.iods = iods;
-    }
-
-
-    /**
-     * Compiles a list of available
-     * @return
-     */
-    public ArrayList<Gate> getAvailableOutputs(){
-        ArrayList<Gate> available = new ArrayList<Gate>();
-        for(Gate g : this.openOutputs){
-            for(Gate check : this.iods){
-                if(!(g.getGateType().equalsIgnoreCase(check.getGateType()))){
-                    available.add(g);
-                    break;
-                }
-            }
-        }
-
-        return available;
-    }
 
 
     private void createGate(String gate, String gateID, Gate input1, Gate input2){
@@ -418,7 +393,6 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     public void addGate(String gate, String gateID, String input1_nameID, String input2_nameID) {
         //Update openOuput list after adding
         this.openOutputs = findOpenOutputs();
-        updateIODList();
 
 
         for(Gate g : this.allGates){
@@ -462,13 +436,16 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
         //Update openOuput list after adding
         this.openOutputs = findOpenOutputs();
-        updateIODList();
     }
 
 
-    public void addGate(LogicBoard block, String gateID, ArrayList<String> inputs){
+    public void addGate(LogicBoard block, String gateID, String[] input){
         this.blocks.add(block);
 
+        ArrayList<String> inputs = new ArrayList<>();
+        for(int i=0; i<input.length;i++){
+            inputs.add(input[i]);
+        }
         //Reference board as a gate object.
         Gate gate = block;
 
@@ -494,7 +471,6 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
         //Update openOuput list after adding
         this.openOutputs = findOpenOutputs();
-        updateIODList();
     }
 
 
@@ -518,10 +494,16 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     }
 
     public String generateTruthTable() {
-
+        ArrayList<Gate> gen;
+        if(this.sysOut.size() > 0){
+            gen = this.sysOut;
+        }
+        else{
+            gen = this.openOutputs;
+        }
         double inputSize = this.logicBoard.size();
         int possibilities = (int)Math.pow(2, inputSize);
-        int [][] truthTable = new int[possibilities][this.logicBoard.size()+this.openOutputs.size()];
+        int [][] truthTable = new int[possibilities][this.logicBoard.size()+gen.size()];
         updateLogicBoard();
         ArrayList<String> labels = new ArrayList<String>();
         if(this.logicBoard.size() > 0) {
@@ -531,10 +513,10 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
                 in++;
             }
         }
-        if(this.openOutputs.size() > 0) {
+        if(gen.size() > 0) {
             int out=0;
-            while(out<this.openOutputs.size()){
-                labels.add(this.openOutputs.get(out).getGateID());
+            while(out<gen.size()){
+                labels.add(gen.get(out).getGateID());
                 out++;
 
             }
@@ -581,7 +563,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
             //Get binary states of outputs and Add their state to the truth table.
             int outputIterate = (this.logicBoard.size());
-            for(Gate g : this.openOutputs){
+            for(Gate g : gen){
                 g.evaluateGate();
                 for(LogicBoard blk : this.blocks){
                     blk.updateLogicBoard();
@@ -602,7 +584,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
         table += ("|\t");
 
-        for(Gate g : this.openOutputs){
+        for(Gate g : gen){
             table += (g.getGateID()+"\t");
         }
 
@@ -1003,16 +985,6 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
             g.evaluateGate();
         }
 
-    }
-
-
-    //Probably delete? yea probably
-    public Gate convertBoard(){
-        Gate gate = null;
-        if(this.logicLock){
-            gate = (Gate)this;
-        }
-        return gate;
     }
 
     public void renameSystemOutput(String currentID, String newID){

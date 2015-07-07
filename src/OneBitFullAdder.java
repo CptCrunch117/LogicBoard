@@ -73,13 +73,10 @@ public class OneBitFullAdder {
       String[] binSwitch = {"A","B","C", "D"};
       LogicBoard board = new LogicBoard(binSwitch, "tester");
 
-     ArrayList<String> in = new ArrayList<String>();
-     in.add("A");
-     in.add("B");
-     in.add("C");
-      board.addGate(fullAdder, "Adder",in);
-      board.updateLogicBoard();
-      System.out.println(board.generateTruthTable());
+        String[] in = {"A","B","C"};
+        board.addGate(fullAdder, "Adder",in);
+        board.updateLogicBoard();
+        System.out.println(board.generateTruthTable());
 
 
     }

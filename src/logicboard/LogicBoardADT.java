@@ -1,7 +1,6 @@
 package logicboard;
 
 import logicboard.gates.Gate;
-
 import java.util.ArrayList;
 
 /**
@@ -25,7 +24,7 @@ public interface LogicBoardADT {
     void addGate(String gate, String gateID, String input1, String input2);
 
 
-    void addGate(LogicBoard block, String gateID, ArrayList<String> inputs);
+    void addGate(LogicBoard block, String gateID, String[] input);
     /**
      * This method adds inputs to the logicboard (this helps the data determine the inputs when generating a truthTable)
      * @param gate the OOD (output only device to add to the logicboard)
@@ -45,7 +44,6 @@ public interface LogicBoardADT {
     Gate findGate(String gateID);
 
 
-    ArrayList<Gate> getAvailableOutputs();
     /**
      * This method grabs all of the inputs and tests all possible cases and shows outputs of all open outputs based
      * on each test case, thus generating the truthTable.
@@ -61,4 +59,7 @@ public interface LogicBoardADT {
     ArrayList<Gate> getSystemOutputs();
 
     void insertLogicBlock(ArrayList<String> gateIN, LogicBoard block);
+
+    ArrayList<Gate> getAllGates();
+
 }
