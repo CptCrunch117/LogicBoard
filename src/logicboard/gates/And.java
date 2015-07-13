@@ -15,6 +15,8 @@ public class And implements Gate, Serializable{
     private Gate input2From;
     private final String TYPE = "IAOD";
     private final String GATE = "AND";
+    private ArrayList<String> expression;
+
     /**
      * Args Constructor, Takes in the to initial inputs and determines output
      * @param input1From
@@ -24,6 +26,14 @@ public class And implements Gate, Serializable{
         this.outputTos = new ArrayList<Gate>();
         setInput1From(input1From);
         setInput2From(input2From);
+        this.expression = new ArrayList<>();
+        String term1;
+        String term2;
+        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
+        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
+        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
+        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
+        this.expression.add(term1+" * "+term2);
         setGateID(null);
         evaluateGate();
     }
@@ -33,11 +43,20 @@ public class And implements Gate, Serializable{
         setGateID(nameID);
         setInput1From(input1From);
         setInput2From(input2From);
+        this.expression = new ArrayList<>();
+        String term1;
+        String term2;
+        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
+        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
+        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
+        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
+        this.expression.add(term1+" * "+term2);
         evaluateGate();
     }
 
     public And(String nameID){
         setGateID(nameID);
+        this.expression = new ArrayList<>();
         setOutputTo(null);
         setInput1From(null);
         setInput2From(null);
@@ -47,11 +66,15 @@ public class And implements Gate, Serializable{
      * No-Args constructor, when an AND gate is created with  no inputs.
      */
     public And(){
+        this.expression = new ArrayList<>();
         setInput1From(null);
         setInput2From(null);
         evaluateGate();
     }
 
+    public ArrayList<String> getExpression(){
+        return this.expression;
+    }
     public void evaluateGate(){
 
         if(getInput1() == 2 || getInput2() == 2 ){

@@ -136,5 +136,10 @@ public class BinaryProbe implements Gate, Serializable{
         return null;
     }
 
+    @Override
+    public ArrayList<String> getExpression() {
+        return null;
+    }
+
 
 }

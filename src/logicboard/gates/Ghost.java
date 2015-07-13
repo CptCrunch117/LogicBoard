@@ -156,6 +156,9 @@ public class Ghost implements Gate, Serializable {
     public ArrayList<Gate> getInputs() {
         return null;
     }
+    public ArrayList<String> getExpression(){
+        return null;
+    }
 
 
 

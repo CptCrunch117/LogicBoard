@@ -17,8 +17,9 @@ public class Not implements Gate, Serializable {
     private String nameID;
     private final String TYPE = "IAOD";
     private final String GATE = "NOT";
-
+    private ArrayList<String> expression;
     public Not(){
+        this.expression = new ArrayList<>();
         this.outputTos = new ArrayList<Gate>();
         setGateID(null);
         setGateID(null);
@@ -28,6 +29,11 @@ public class Not implements Gate, Serializable {
     public Not(Gate input1){
         this.outputTos = new ArrayList<Gate>();
         setInput1From(input1);
+        this.expression = new ArrayList<>();
+        String term1;
+        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
+        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
+        this.expression.add(term1+" '");
         setGateID(null);
         evaluateGate();
     }
@@ -35,6 +41,11 @@ public class Not implements Gate, Serializable {
     public Not(Gate input1From, String nameID){
         this.outputTos = new ArrayList<Gate>();
         setInput1From(input1From);
+        this.expression = new ArrayList<>();
+        String term1;
+        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
+        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
+        this.expression.add(term1+" '");
         setGateID(nameID);
         evaluateGate();
     }
@@ -52,6 +63,9 @@ public class Not implements Gate, Serializable {
         }
     }
 
+    public ArrayList<String> getExpression(){
+        return this.expression;
+    }
     @Override
     public String getGateID() {
         return this.nameID;

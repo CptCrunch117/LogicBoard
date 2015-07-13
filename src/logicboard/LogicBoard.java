@@ -25,6 +25,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
     //LogicBoard Variables
     private String logicBoardName;
+    private ArrayList<String> sysExpressions;
     private String gateID;
     private ArrayList<Gate> logicBoard;             //Keeps track of System inputs
     private ArrayList<Gate> openInputs;             //Keeps track of gates with null inputs
@@ -68,9 +69,17 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         this.openOutputs = findOpenOutputs();
         this.logicLock = false;
         this.blocks = new ArrayList<LogicBoard>();
+        this.sysExpressions = new ArrayList<>();
     }
 
-
+    /**
+     *
+     * @param lib
+     * @param fileName
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static LogicBoard getBoard(String lib, String fileName) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(lib+fileName+".ser");
         ObjectInputStream ois = new ObjectInputStream(fis);
@@ -140,7 +149,19 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     }
 
     public ArrayList<Gate> getAllGates(){
-        return this.allGates;
+        ArrayList<Gate> allgat = new ArrayList<>();
+        for(Gate g : this.allGates){
+            try {
+                LogicBoard b = (LogicBoard) g;
+                for(Gate gg : b.getSysOut()){
+                    allgat.add(gg);
+                }
+            }catch(ClassCastException e){
+               allgat.add(g);
+            }
+        }
+
+        return allgat;
     }
 
 
@@ -662,6 +683,11 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
     }
 
+    private void setSystemExpressions(){
+        for(Gate g : this.sysOut){
+            this.sysExpressions.add(g.getExpression().get(0));
+        }
+    }
 
     public void setSystemOutputs(ArrayList<String> gateIDs) {
         int count = 0;
@@ -683,6 +709,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         }
         //LockGate from manipulation.
         if(isSet){
+            setSystemExpressions();
             this.logicLock = true;
         }
     }
@@ -991,7 +1018,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         Gate rename = null;
         for(int i=0; i < this.sysOut.size();i++){
             if(this.sysOut.get(i).getGateID().equalsIgnoreCase(currentID)){
-                this.sysOut.get(i).setGateID(newID);
+                this.sysOut.get(i).setGateID(this.gateID+"_"+newID);
                 break;
             }
         }
@@ -1104,9 +1131,10 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         return this.logicBoard;
     }
 
-
-
-
+    @Override
+    public ArrayList<String> getExpression() {
+        return this.sysExpressions;
+    }
 
 
     //-----NA-----\\

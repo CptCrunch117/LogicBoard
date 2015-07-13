@@ -129,4 +129,5 @@ public interface Gate {
 
     ArrayList<Gate> getInputs();
 
+    ArrayList<String> getExpression();
 }

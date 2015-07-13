@@ -21,8 +21,10 @@ public class TwoBitCompExample {
         //Build main logic for 2BitComparator
         String[] inp = {"A1", "A0", "B1", "B0"};
         BoardTreeBuilder build = new BoardTreeBuilder();
-        LogicBoard jonnyHWK = build.buildTree("( ( A0 * ( A1 ' ) ) + ( ( B0 * ( A1 ' ) ) * ( B1 ' ) ) ) + ( ( A0 * B0 ) * ( B1 ' ) )", inp, "2BitComp");
-        jonnyHWK = builder.buildTree("( ( ( A0 ' ) * A1 ) + ( ( ( A0 ' ) * ( B0 ' ) ) * B1 ) ) + ( ( ( B0 ' ) * A1 ) * B1 )", jonnyHWK);
+        //A>B
+        LogicBoard jonnyHWK = build.buildTree("( ( A1 * ( B1 ' ) ) + ( ( A0 * ( B1 ' ) ) * ( B0 ' ) ) ) + ( ( A1 * A0 ) * ( B0 ' ) )", inp, "2BitComp");
+        //A<B
+        jonnyHWK = builder.buildTree("( ( ( A1 ' ) * B1 ) + ( ( ( A1 ' ) * ( A0 ' ) ) * B0 ) ) + ( ( ( A0 ' ) * B1 ) * B0 )", jonnyHWK);
         //-----------------------------------------------------------
 
         //Grab an XOR gate from library
@@ -41,9 +43,9 @@ public class TwoBitCompExample {
         //FINALIZE LOGICBOARD PHASE
         //Set System Outputs
         ArrayList<String> set = new ArrayList<>();
-        set.add("(((A0and(A1not))or((B0and(A1not))and(B1not)))or((A0andB0)and(B1not)))");
+        set.add("(((A1and(B1not))or((A0and(B1not))and(B0not)))or((A1andA0)and(B0not)))");
         set.add("XNOR");
-        set.add("((((A0not)andA1)or(((A0not)and(B0not))andB1))or(((B0not)andA1)andB1))");
+        set.add("((((A1not)andB1)or(((A1not)and(A0not))andB0))or(((A0not)andB1)andB0))");
         jonnyHWK.setSystemOutputs(set);
         //-----------------------------------------------------------
         //Rename System Outputs
@@ -51,10 +53,13 @@ public class TwoBitCompExample {
         rename.add("A>B");
         rename.add("A=B");
         rename.add("A<B");
-        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(2).getGateID(),"A>B");
+        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(0).getGateID(),"A>B");
         jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(1).getGateID(),"A=B");
-        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(0).getGateID(),"A<B");
+        jonnyHWK.renameSystemOutput(jonnyHWK.getSystemOutputs().get(2).getGateID(),"A<B");
         //-----------------------------------------------------------
+		for(String s : jonnyHWK.getExpression()){
+			System.out.println(s);
+		}
 
         //Print Stuffs Phase
         System.out.println();
@@ -70,6 +75,26 @@ public class TwoBitCompExample {
         System.out.println("-----------------------------------");
         System.out.println(jonnyHWK.generateTruthTable());
 
+        String[] input2 = {"A","B","C","D","E","F","G","H"};
+        LogicBoard compTest = new LogicBoard(input2,"compTest");
+        compTest.addGate(LogicBoard.AND,"AB","A","B");
+        compTest.addGate(LogicBoard.AND,"CD","C","D");
+        compTest.addGate(LogicBoard.AND,"EF","E","F");
+        compTest.addGate(LogicBoard.AND,"GH","G","H");
+        String[] in3 = {"AB","CD","EF","GH"};
+        compTest.addGate(jonnyHWK,"comparator",in3);
+        ArrayList<String> set2 = new ArrayList<>();
+        set2.add("2BitComp_A>B");
+        set2.add("2BitComp_A=B");
+        set2.add("2BitComp_A<B");
+        compTest.setSystemOutputs(set2);
+        for(Gate g : compTest.getAllGates()){
+                System.out.println(g.getGateID());
+        }
+        System.out.println(compTest.generateTruthTable());
+		for(String s : compTest.getExpression()){
+			System.out.println(s);
+		}
     }
 
 

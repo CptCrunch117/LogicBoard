@@ -15,11 +15,13 @@ public class BinarySwitch implements Gate, Serializable
     private final String TYPE = "OOD";
     private final String GATE = "BinarySwitch";
     private Gate input1;
-
+    private ArrayList<String> expression;
     public BinarySwitch(){
         this.outputTos = new ArrayList<Gate>();
         setGateID(nameID);
         setOutput(0);
+        this.expression = new ArrayList<>();
+        this.expression.add(this.nameID);
 
 
 
@@ -29,9 +31,15 @@ public class BinarySwitch implements Gate, Serializable
         this.outputTos = new ArrayList<Gate>();
         setGateID(nameID);
         setOutput(1);
+        this.expression = new ArrayList<>();
+        this.expression.add(this.nameID);
     }
 
 
+    @Override
+    public ArrayList<String> getExpression() {
+        return this.expression;
+    }
     public void setOutput(int output){
         this.output = output;
         evaluateGate();
@@ -177,6 +185,7 @@ public class BinarySwitch implements Gate, Serializable
     public ArrayList<Gate> getInputs() {
         return null;
     }
+
 
     @Override
     public Gate getInput2From() {

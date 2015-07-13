@@ -18,6 +18,7 @@ public class Or implements Gate, Serializable {
     private String nameID;
     private final String TYPE = "IAOD";
     private final String GATE = "OR";
+    private ArrayList<String> expression;
     /**
      * Args Constructor, Takes in the to initial inputs and determines output
      * @param input1From
@@ -28,6 +29,14 @@ public class Or implements Gate, Serializable {
         setGateID(null);
         setInput1From(input1From);
         setInput2From(input2From);
+        this.expression = new ArrayList<>();
+        String term1;
+        String term2;
+        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
+        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
+        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
+        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
+        this.expression.add(term1+" + "+term2);
         evaluateGate();
     }
 
@@ -36,13 +45,21 @@ public class Or implements Gate, Serializable {
         setGateID(nameID);
         setInput1From(input1From);
         setInput2From(input2From);
-        evaluateGate();
+        this.expression = new ArrayList<>();
+        String term1;
+        String term2;
+        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
+        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
+        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
+        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
+        this.expression.add(term1+" + "+term2);         evaluateGate();
     }
     /**
      * No-Args constructor, when an AND gate is created with  no inputs.
      */
     public Or(){
         this.outputTos = new ArrayList<Gate>();
+        this.expression = new ArrayList<>();
         setGateID(null);
         setInput1From(null);
         setInput2From(null);
@@ -51,6 +68,7 @@ public class Or implements Gate, Serializable {
 
     public Or(String nameID){
         this.outputTos = new ArrayList<Gate>();
+        this.expression = new ArrayList<>();
         setGateID(nameID);
         setInput1From(null);
         setInput2From(null);
@@ -69,6 +87,9 @@ public class Or implements Gate, Serializable {
         }
     }
 
+    public ArrayList<String> getExpression(){
+        return this.expression;
+    }
     @Override
     public String getGateID() {
         return this.nameID;
