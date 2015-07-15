@@ -114,4 +114,7 @@ Process finished with exit code 0
     correct small/simple errors in the expression passed before parsing.
     (adding spaces, checking parentheses, etc.) Well thats it for this update message, thanks for reading and
     following!
+    
+<h2>Update 3.5</h2>
+    What's up world!? Mini Update time! So In the last update (just above) I talked about adding a feature that allows a LogicBoard Object to be able to build itself based on n number of boolean expressions. Well it works! I also added a feature that allows one to view the boolean expresion of each and every gate in a LogicBoard object. This allows one who builds the LogicBoard gate by gate, to view the boolean expression as they go as well as when they complete the build! A lot of code was added but just does a lot of solving for the expression feature, that's why I'm just considering this a +0.5 update! Have A good one fellow Brogrammers, I catch ya in the next update!
 
