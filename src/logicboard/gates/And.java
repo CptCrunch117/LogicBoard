@@ -1,5 +1,7 @@
 package logicboard.gates;
 
+import logicboard.Exceptions.SwapFailureException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -27,13 +29,7 @@ public class And implements Gate, Serializable{
         setInput1From(input1From);
         setInput2From(input2From);
         this.expression = new ArrayList<>();
-        String term1;
-        String term2;
-        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
-        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
-        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
-        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
-        this.expression.add(term1+" * "+term2);
+        generateExpression();
         setGateID(null);
         evaluateGate();
     }
@@ -44,16 +40,28 @@ public class And implements Gate, Serializable{
         setInput1From(input1From);
         setInput2From(input2From);
         this.expression = new ArrayList<>();
-        String term1;
-        String term2;
-        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
-        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
-        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
-        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
-        this.expression.add(term1+" * "+term2);
+        generateExpression();
         evaluateGate();
     }
 
+    @Override
+    public String generateExpression(){
+        String term1;
+        String term2;
+        if(getInput1From().getGateType().equalsIgnoreCase("BinarySwitch")){term1 = getInput1From().getExpression().get(0);}
+        else{term1 ="( "+getInput1From().getExpression().get(0) + " )";
+        }
+        if(getInput2From().getGateType().equalsIgnoreCase("BinarySwitch")){term2 = getInput2From().getExpression().get(0);}
+        else{term2 ="( "+getInput2From().getExpression().get(0)+" )";}
+        if(this.expression.size() >= 1){
+            String oldEx = this.expression.get(0);
+            this.expression.clear();
+            this.expression.add(term1+" * "+ term2);
+        }else{
+            this.expression.add(term1 + " * " + term2);
+        }
+        return (term1+" * "+ term2);
+    }
     public And(String nameID){
         setGateID(nameID);
         this.expression = new ArrayList<>();
@@ -75,7 +83,8 @@ public class And implements Gate, Serializable{
     public ArrayList<String> getExpression(){
         return this.expression;
     }
-    public void evaluateGate(){
+
+    public void evaluateGate() {
 
         if(getInput1() == 2 || getInput2() == 2 ){
             setOutput(2);
@@ -113,6 +122,21 @@ public class And implements Gate, Serializable{
     }
     public synchronized void setOutput(int output) {
         this.output = output;
+    }
+
+    @Override
+    public void swapInput(int inputPos, Gate switchWith) {
+        if(inputPos == 0){
+            boolean check = getInput1From().getOutputTo().remove(this) ? true : false;
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else setInput1From(switchWith);
+
+        }
+        else if(inputPos == 1){
+            boolean check = getInput2From().getOutputTo().remove(this) ? true : false;
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else setInput2From(switchWith);
+        }
     }
 
     private  synchronized int getInput1() {

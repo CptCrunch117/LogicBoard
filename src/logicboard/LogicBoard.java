@@ -14,7 +14,8 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     public static final String AND = "and";
     public static final String NOT = "not";
     public static final String OR = "or";
-
+    public static final String STANDARD_LIB = "standard_lib";
+    public static final String USER_LIB = "user_lib";
 
     //Gate variables
     ArrayList<Gate> inputs;
@@ -81,13 +82,14 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
      * @throws ClassNotFoundException
      */
     public static LogicBoard getBoard(String lib, String fileName) throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(lib+fileName+".ser");
+        FileInputStream fis = new FileInputStream(lib+"/"+fileName);
         ObjectInputStream ois = new ObjectInputStream(fis);
         LogicBoard temp = (LogicBoard) ois.readObject();
         fis.close();
         ois.close();
         return temp;
     }
+
 
     public LogicBoard cloneBoard(String gateID){
         LogicBoard clone = null;
@@ -132,8 +134,60 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
 
         return clone;
     }
-    public void saveBoard(){
-        try {
+
+
+    public void saveBoard(String directory){
+
+        if(directory.equalsIgnoreCase(LogicBoard.STANDARD_LIB)){
+            File standir = new File(LogicBoard.STANDARD_LIB);
+            if(!standir.exists()){
+                try{
+                    standir.mkdir();
+                }
+                catch (SecurityException e){
+                    //figure it out biiiiiiitch
+                }
+            }//END IF
+            try {
+                this.objectFile = LogicBoard.STANDARD_LIB+"/"+this.logicBoardName+".ser";
+                FileOutputStream fileOut = new FileOutputStream(this.objectFile);
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(this);
+                out.close();
+                fileOut.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }//END IF STANDARD_LIB
+        else if(directory.equalsIgnoreCase(LogicBoard.USER_LIB)){
+            File usedir = new File(LogicBoard.USER_LIB);
+            if(!usedir.exists()){
+                try{
+                    usedir.mkdir();
+                }
+                catch (SecurityException e){
+                    //figure it out biiiiiiitch
+                }
+
+            }//END IF
+            try {
+                this.objectFile = LogicBoard.USER_LIB+"/"+this.logicBoardName+".ser";
+                FileOutputStream fileOut = new FileOutputStream(this.objectFile);
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(this);
+                out.close();
+                fileOut.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }//END IF USER_LIB
+
+
+        /*try {
             this.objectFile = this.logicBoardName+".ser";
             FileOutputStream fileOut = new FileOutputStream(this.objectFile);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -144,7 +198,7 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -714,6 +768,9 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         }
     }
 
+    public boolean getLogicLock(){
+        return this.logicLock;
+    }
 
     public ArrayList<Gate> getSystemOutputs() {
         return this.sysOut;
@@ -1026,7 +1083,65 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
     }
 
 
+    /**
+     * This method utilizes a different flavor of the findGate recursion method. Allows one to update the boolean expressions
+     * of all the gates in the LogicBoard object.*/
+    public void expressionsUpdate(){
 
+        //First check if gate is binary switch
+        for(int i=0; i < this.logicBoard.size(); i++){
+            this.logicBoard.get(i).generateExpression();
+        }
+
+        //if not switch gate found should be null and isFound should be false.
+        //
+        for(int i=0; i < this.logicBoard.size(); i++) {
+            Gate g = this.logicBoard.get(i);
+            updater(g);
+        }
+    }
+
+    /**
+     * Allows one to update the expressions of all gates in a logic board, good practice if Inputs have been swapped.
+     * This will keep the expressions current relative to the status of relationships of the other gates within the
+     * LogicBoard object.
+     *
+     * @param find the next gate in the linked Gate list.
+     * @return the target gate object (with same gateID passed of course), or, if not found, null
+     */
+    private void updater(Gate find){
+        ArrayList<Gate> temp = new ArrayList<Gate>();
+
+        if(find.getDeviceType().equalsIgnoreCase("logicboard")){
+
+            for(int i=0; i < find.getSysOut().size(); i++){
+                    find.getSysOut().get(i).generateExpression();
+            }
+
+            for(int i=0; i < find.getSysOut().size(); i++) {
+                Gate g = find.getSysOut().get(i);
+                updater(g);
+            }
+
+        }
+        else {
+            if (find.getOutputTo().isEmpty()) {
+                find.generateExpression();
+                return;
+            }
+            //Base case-2
+            else {
+                for (Gate gate : find.getOutputTo()) {
+                    temp.add(gate);
+                }
+                for (Gate gate : temp) {
+                    updater(gate);
+                }
+            }
+        }
+
+        return;
+    }
 
     //----------GATE IMPLEMENTATION----------\\
 
@@ -1051,6 +1166,17 @@ public class LogicBoard implements LogicBoardADT, Serializable, Gate {
         this.updateLogicBoard();
     }
 
+    @Override
+    public void swapInput(int inputPos, Gate switchWith) {
+            boolean check = getInputs().get(inputPos).getInput1From().getOutputTo().remove(this);
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else getInputs().get(inputPos).setInput1From(switchWith);
+    }
+
+    @Override
+    public String generateExpression() {
+        return null;
+    }
 
     public String getGateID() {
         return this.gateID;

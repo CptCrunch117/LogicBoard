@@ -104,6 +104,11 @@ public interface Gate {
      */
     void setOutput(int output);
 
+    //getinputs
+    void swapInput(int inputPos, Gate switchWith);
+
+    String generateExpression();
+
     /**
      * Sets gates pointers to null, thus removing ability to access object later in code, therfore
      * garbage collector will take care of it.

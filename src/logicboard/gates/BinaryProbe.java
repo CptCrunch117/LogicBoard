@@ -1,5 +1,7 @@
 package logicboard.gates;
 
+import logicboard.Exceptions.SwapFailureException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -140,6 +142,24 @@ public class BinaryProbe implements Gate, Serializable{
     public ArrayList<String> getExpression() {
         return null;
     }
+    @Override
+    public void swapInput(int inputPos, Gate switchWith) {
+        if(inputPos == 0){
+            boolean check = getInput1From().getOutputTo().remove(this) ? true : false;
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else setInput1From(switchWith);
 
+        }
+        else if(inputPos == 1){
+            boolean check = getInput2From().getOutputTo().remove(this) ? true : false;
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else setInput2From(switchWith);
+        }
+    }
+
+    @Override
+    public String generateExpression() {
+        return null;
+    }
 
 }

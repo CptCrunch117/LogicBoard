@@ -1,5 +1,6 @@
 package logicboard.gates;
 
+import logicboard.Exceptions.SwapFailureException;
 import logicboard.gates.Gate;
 
 import java.io.Serializable;
@@ -30,13 +31,7 @@ public class Or implements Gate, Serializable {
         setInput1From(input1From);
         setInput2From(input2From);
         this.expression = new ArrayList<>();
-        String term1;
-        String term2;
-        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
-        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
-        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
-        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
-        this.expression.add(term1+" + "+term2);
+        generateExpression();
         evaluateGate();
     }
 
@@ -46,13 +41,8 @@ public class Or implements Gate, Serializable {
         setInput1From(input1From);
         setInput2From(input2From);
         this.expression = new ArrayList<>();
-        String term1;
-        String term2;
-        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
-        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
-        if(input2From.getGateType().equalsIgnoreCase("BinarySwitch")){term2 = input2From.getExpression().get(0);}
-        else{term2 ="( "+input2From.getExpression().get(0)+" )";}
-        this.expression.add(term1+" + "+term2);         evaluateGate();
+        generateExpression();
+        evaluateGate();
     }
     /**
      * No-Args constructor, when an AND gate is created with  no inputs.
@@ -91,6 +81,25 @@ public class Or implements Gate, Serializable {
         return this.expression;
     }
     @Override
+    public String generateExpression(){
+        String term1;
+        String term2;
+        if(getInput1From().getGateType().equalsIgnoreCase("BinarySwitch")){term1 = getInput1From().getExpression().get(0);}
+        else{term1 ="( "+getInput1From().getExpression().get(0)+" )";}
+        if(getInput2From().getGateType().equalsIgnoreCase("BinarySwitch")){term2 = getInput2From().getExpression().get(0);}
+        else{term2 ="( "+getInput2From().getExpression().get(0)+" )";}
+        this.expression.add(term1+" + "+term2);
+        if(this.expression.size() >= 1){
+            String oldEx = this.expression.get(0);
+            this.expression.clear();
+            this.expression.add(term1+" + "+term2);
+        }else{
+            this.expression.add(term1+" + "+term2);
+        }
+        return (term1+" + "+term2);
+    }
+
+    @Override
     public String getGateID() {
         return this.nameID;
     }
@@ -109,7 +118,20 @@ public class Or implements Gate, Serializable {
         return this.GATE;
     }
 
+    @Override
+    public void swapInput(int inputPos, Gate switchWith) {
+        if(inputPos == 0){
+            boolean check = getInput1From().getOutputTo().remove(this) ? true : false;
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else setInput1From(switchWith);
 
+        }
+        else if(inputPos == 1){
+            boolean check = getInput2From().getOutputTo().remove(this) ? true : false;
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else setInput2From(switchWith);
+        }
+    }
     @Override
     public synchronized int getOutput() {
         evaluateGate();

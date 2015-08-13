@@ -1,5 +1,6 @@
 package logicboard.gates;
 
+import logicboard.Exceptions.SwapFailureException;
 import logicboard.gates.Gate;
 
 import java.io.Serializable;
@@ -30,10 +31,7 @@ public class Not implements Gate, Serializable {
         this.outputTos = new ArrayList<Gate>();
         setInput1From(input1);
         this.expression = new ArrayList<>();
-        String term1;
-        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
-        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
-        this.expression.add(term1+" '");
+        generateExpression();
         setGateID(null);
         evaluateGate();
     }
@@ -42,10 +40,7 @@ public class Not implements Gate, Serializable {
         this.outputTos = new ArrayList<Gate>();
         setInput1From(input1From);
         this.expression = new ArrayList<>();
-        String term1;
-        if(input1From.getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
-        else{term1 ="( "+input1From.getExpression().get(0)+" )";}
-        this.expression.add(term1+" '");
+        generateExpression();
         setGateID(nameID);
         evaluateGate();
     }
@@ -114,7 +109,12 @@ public class Not implements Gate, Serializable {
         return in;
     }
 
-
+    @Override
+    public void swapInput(int inputPos, Gate switchWith) {
+            boolean check = getInput1From().getOutputTo().remove(this) ? true : false;
+            if(!check) throw new SwapFailureException(this.getGateID());
+            else setInput1From(switchWith);
+    }
     private synchronized int getInput1() {
         int input1 = 0;
         if(getInput1From() != null){
@@ -143,6 +143,20 @@ public class Not implements Gate, Serializable {
         this.input1From = input1;
     }
 
+    @Override
+    public String generateExpression(){
+        String term1;
+        if(getInput1From().getGateType().equalsIgnoreCase("BinarySwitch")){term1 = input1From.getExpression().get(0);}
+        else{term1 ="( "+getInput1From().getExpression().get(0)+" )";}
+        if(this.expression.size() >= 1){
+            String oldEx = this.expression.get(0);
+            this.expression.clear();
+            this.expression.add(term1+" '");
+        }else{
+            this.expression.add(term1+" '");
+        }
+        return (term1+" '");
+    }
 
 
     //  N/A  \\
