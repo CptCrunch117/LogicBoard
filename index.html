@@ -5,14 +5,14 @@
     <title>Logicboard by CptCrunch117</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
     <section class="page-header">
       <h1 class="project-name">Logicboard</h1>
-      <h2 class="project-tagline">This is a java console implementation of the LogicBoard project. It&#39;s purpose is for proof of concept. Once completed it will be implemented as an application using GUI. This project focuses on the data structure to handle creation,edits, and saves of a logicBoard project.All source code has been designed and implemented by Kyle Ferguson (Brogrammer Studios). This is kind of a private project</h2>
+      <h2 class="project-tagline">This is a java console implementation of the LogicBoard project. It&#39;s purpose is for proof of concept. Once completed it will be implemented as an application using GUI. This project focuses on the data structure to handle creation,edits, and saves of a logicBoard project.All source code has been designed and implemented by Kyle Ferguson (Singularity Systems).  Download it, test it out in your favorite IDE and let me now about any bugs!  SingularitySystemsDev@gmail.com</h2>
       <a href="https://github.com/CptCrunch117/LogicBoard" class="btn">View on GitHub</a>
       <a href="https://github.com/CptCrunch117/LogicBoard/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/CptCrunch117/LogicBoard/tarball/master" class="btn">Download .tar.gz</a>
@@ -20,49 +20,63 @@
 
     <section class="main-content">
       <h3>
-<a id="update-1" class="anchor" href="#update-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update 1</h3>
+<a id="update-4" class="anchor" href="#update-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update 4</h3>
 
-<pre><code>As of now a clean up and error catching process is being done on the data structure.
-Once done Logic blocking, object saving and cloning will be implemented. This will allow 
-for saving of LogicBoards (blocks) and when deserialized multiple copies can be made so you can
-have mulitple logic blocks with the same logic from the saved version althroughout any other logic board.
-</code></pre>
-
-<h3>
-<a id="update-2" class="anchor" href="#update-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update 2</h3>
-
-<pre><code>Alright as of now new exceptions have been created for certain error occurances in the data structure. 
-Clean up is as always underway. Also Designs for new functions are being made.(hint hint circuit 
-simplification tools :D). However as testing continues I have started designing some much needed
-functions to make building boards more intuitive based on some not so intuitive processes I 
-designed earlier. Logicboards can be saved and cloned. LogicBoards implemented into other logicboards
-now act as a gate object as they now implement the Gate interface. Logicboards also allow you to rename 
-it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
-Might add some addition features for that. This is probably the biggest update... mainly cause I have 
-been lazy and haven't been logging the commits made since update 1. In any case, feel free to look at 
-the code friends. Please notify me before using code, alot of time has been spent on this...also becuase
-it's far from done.
+<pre><code>So never got around to updating the site, but just wanna let you guys know that I have started work on a console driven 
+application using the data structure I have been working on. As always with the data structure there are tons of things I 
+want to add and need to fix. The console application is no exception to that either! Although its a a test I want to test 
+out as many features as possible before trying to implement the graphical side of things. This makes rapid dev more rapid 
+and allows me to quickly see how an application might function. Right now the console app doesn't have all features 
+implemented, and errors have not been handled, nor has documentation been completed. Hopefully I can tackle these things 
+soon! School has made me quite busy but regardless feel free to download the project and test it out. Friendly feedback, 
+fault reports, ideas, etc. are always welcome! Remember, please direct all of those to my development email: 
+SingularitySystemsDev@gmail.com
 </code></pre>
 
 <h3>
 <a id="update-3" class="anchor" href="#update-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update 3</h3>
 
 <pre><code>Hey what's up guys!? Back for another update to the source code. Alright so first off I totally did an 
-overhaul to the folder structure of the project. This makes it emensely better as the structure of the 
+overhaul to the folder structure of the project. This makes it immensely better as the structure of the 
 program is more clear and easier to understand. Next up is the beginning of the implementation of a
 sort-of sub project. I started designing and implementing some code that should be able to parse a 
 boolean expression, build a binary tree from it, and finally, based on the structure of the tree,
 build a logic board from the expression. This class that does this can take as many expressions and
 build logic based on it with the same board. The drawback is that the boolean expression can only
-contain values of the BOARDS INITIAL INPUTS. Each boolean expression only yeilds one ouput. Say you
+contain values of the BOARDS INITIAL INPUTS. Each boolean expression only yields one output. Say you
 have a board with inputs of A, B, C, and D. We want it to output (A'+B*C) and have another 
 output: (D*C*A). Well the answer is staring us in the face! We would simply add those two expressions
-to a BoardTree objects list of expressions! The reason this works is becuase a gate can theoretically
-ouput TO an infinite number of inputs. The next thing I am going to work on is testing, debugging, and 
+to a BoardTree objects list of expressions! The reason this works is because a gate can theoretically
+output TO an infinite number of inputs. The next thing I am going to work on is testing, debugging, and 
 of course fixing this new implementation. The next thing I want to work on is a SMART parser that can
 correct small/simple errors in the expression passed before parsing.
 (adding spaces, checking parentheses, etc.) Well thats it for this update message, thanks for reading and
 following!
+</code></pre>
+
+<h3>
+<a id="update-2" class="anchor" href="#update-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update 2</h3>
+
+<pre><code>Alright as of now new exceptions have been created for certain error occurrences in the data structure. 
+Clean up is as always underway. Also Designs for new functions are being made.(hint hint circuit 
+simplification tools :D). However as testing continues I have started designing some much needed
+functions to make building boards more intuitive based on some not so intuitive processes I 
+designed earlier. Logicboard's can be saved and cloned. LogicBoards implemented into other logicboard's
+now act as a gate object as they now implement the Gate interface. Logicboard's also allow you to rename 
+it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
+Might add some addition features for that. This is probably the biggest update... mainly cause I have 
+been lazy and haven't been logging the commits made since update 1. In any case, feel free to look at 
+the code friends. Please notify me before using code, a lot of time has been spent on this...also because
+it's far from done.
+</code></pre>
+
+<h3>
+<a id="update-1" class="anchor" href="#update-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update 1</h3>
+
+<pre><code>As of now a clean up and error catching process is being done on the data structure.
+Once done Logic blocking, object saving and cloning will be implemented. This will allow 
+for saving of LogicBoards (blocks) and when deserialized multiple copies can be made so you can
+have mulitple logic blocks with the same logic from the saved version all throughout any other logic board.
 </code></pre>
 
       <footer class="site-footer">
@@ -76,4 +90,3 @@ following!
   
   </body>
 </html>
-
