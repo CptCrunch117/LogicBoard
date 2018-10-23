@@ -12,6 +12,7 @@ import logicboard.LogicBoard;
  * Created by CptAmerica on 7/8/15.
  */
 public class ConsoleApp {
+    
     public static int lines = 0;
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         ConsoleApp app = new ConsoleApp();
