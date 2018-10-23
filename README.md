@@ -1,13 +1,9 @@
 # LogicBoard
-This is a java console implementation of the LogicBoard project.
-It's purpose is for proof of concept. 
-Once completed it will be implemented as an application using GUI. 
-This project focuses on the data structure to handle creation,edits, and saves of a logicBoard project.
-All source code has been designed and implemented by Kyle Ferguson (Brogrammer Studios).
+A CLI circuit designer written in java.
+Will be archiving this repo soon as this was a passion project when I was a 
+freshman in college. May implement this later with what I've learned since then.
 
-
-Sample of Console
-Console Output of OneBitFullAdder class:
+Console Output of OneBitFullAdder circuit developed using the program:
 <table>
 <th>One bit full adder</th>
     <tr>
@@ -78,40 +74,130 @@ Console Output of OneBitFullAdder class:
 </table>
 Process finished with exit code 0
 
-<h2>Update 1</h2>
-    As of now a clean up and error catching process is being done on the data structure.
-    Once done Logic blocking, object saving and cloning will be implemented. This will allow 
-    for saving of LogicBoards (blocks) and when deserialized multiple copies can be made so you can
-    have mulitple logic blocks with the same logic from the saved version althroughout any other logic board.
+### Using the editor (boolean expression example)
+In the CLI you will be presented the following prompt:
+```text
+Welcome to the LogicBoard gate simulator. This is a console
+implementation of the application for testing purposes only.
+Select a function of the application to use by entering the option's
+corresponding number (to the left):
+1. Browse Libraries
+2. Create new LogicBoard
+3. Help & Guides
+4. Quit
+>
+```
 
-<h2>Update 2</h2>
-    Alright as of now new exceptions have been created for certain error occurances in the data structure. 
-    Clean up is as always underway. Also Designs for new functions are being made.(hint hint circuit 
-    simplification tools :D). However as testing continues I have started designing some much needed
-    functions to make building boards more intuitive based on some not so intuitive processes I 
-    designed earlier. Logicboards can be saved and cloned. LogicBoards implemented into other logicboards
-    now act as a gate object as they now implement the Gate interface. Logicboards also allow you to rename 
-    it's system output gates gateID. This allows for more intuitive debugging for whatever user is creating! 
-    Might add some addition features for that. This is probably the biggest update... mainly cause I have 
-    been lazy and haven't been logging the commits made since update 1. In any case, feel free to look at 
-    the code friends. Please notify me before using code, alot of time has been spent on this...also becuase
-    it's far from done.
-    
-<h2>Update 3</h2>
-    Hey what's up guys!? Back for another update to the source code. Alright so first off I totally did an 
-    overhaul to the folder structure of the project. This makes it emensely better as the structure of the 
-    program is more clear and easier to understand. Next up is the beginning of the implementation of a
-    sort-of sub project. I started designing and implementing some code that should be able to parse a 
-    boolean expression, build a binary tree from it, and finally, based on the structure of the tree,
-    build a logic board from the expression. This class that does this can take as many expressions and
-    build logic based on it with the same board. The drawback is that the boolean expression can only
-    contain values of the BOARDS INITIAL INPUTS. Each boolean expression only yeilds one ouput. Say you
-    have a board with inputs of A, B, C, and D. We want it to output (A'+B*C) and have another 
-    output: (D*C*A). Well the answer is staring us in the face! We would simply add those two expressions
-    to a BoardTree objects list of expressions! The reason this works is becuase a gate can theoretically
-    ouput TO an infinite number of inputs. The next thing I am going to work on is testing, debugging, and 
-    of course fixing this new implementation. The next thing I want to work on is a SMART parser that can
-    correct small/simple errors in the expression passed before parsing.
-    (adding spaces, checking parentheses, etc.) Well thats it for this update message, thanks for reading and
-    following!
+To create a new gate with a boolean expression, type `2` and press `enter`.
 
+You will then be prompted with the following
+```text
+Enter the names of the inputs for the new LogicBoard. Enter: @@ to exit:
+> 
+```
+For each input you want, enter the name you want for each given input and press enter. 
+For example, say I want a gate with 3 inputs, and I want them to be named `A`, `B`, and `C`.
+Then you would do the following:
+- type in `A` and press `enter`
+- type in `B` and press `enter`
+- type in `C` and press `enter`
+- type in `@@` and press enter. This signifies you are done naming your inputs.
+
+you will then be prompted to enter the name of your logicboard:
+```text
+Enter the name for the new LogicBoard:
+>
+```
+Type in the name you want to name your new logic board. We'll name our example board `aNewTest`.
+
+The CLI Circuit editor will be "opened" and you will get the main editor prompt:
+```text
+aNewTest Board has been created and save to the user library!
+Enter the number that corresponds with the function you wish to use, enter 'b' or 'back' to exit editmode.
+(Don't worry your board will automatically be saved!)
+1. Add Gate
+2. Add boolean expression
+3. View board data
+4. Remove Gate
+5. Replace Gate
+Back?
+> 
+``` 
+
+Now, to build out your logic gate via a boolean expression, type in `2` and press `enter`.
+
+You will then be prompted with the boolean expression editor:
+```text
+Available gate to use for expression (use their exact name in your expression): 
+	- A
+	- B
+	- C
+Enter the expression to add Example: ( A + B ) * ( C ' ) (Hint: no parentheses around root operator)
+```
+For now, we will use the example provided in the prompt.
+<br>
+**NOTE:** This parser is pretty basic, I wrote it in my freshman year of college so there isn't a lot of
+error catching or space correcting code. So make sure there is a space between each input name and op character.
+<br>
+**NOTE:** The top level expression should NOT be wrapped in parentheses.
+
+enter `( A + B ) * ( C ' )` and press enter.
+
+You will then be taken back to the main editor prompt:
+```Expression: ( A + B ) * ( C ' ) has been added to LogicBoard: aNewTest
+   Enter the number that corresponds with the function you wish to use, enter 'b' or 'back' to exit editmode.
+   (Don't worry your board will automatically be saved!)
+   1. Add Gate
+   2. Add boolean expression
+   3. View board data
+   4. Remove Gate
+   5. Replace Gate
+   Back?
+   > ```
+   let's check out the board data by typing `3` and pressing `enter`.
+   We will be prompted with the logic gate info prompt:
+   ```text
+   What would you like to see in LogicBoard/Gate: aNewTest?
+   1. TruthTable
+   2. List of all Gates
+   3. List of Gate Associations
+   4. View Boolean expressions
+   back?
+   >
+   ```
+   You can check out a lot of cool info with your board but for now let's just checkout the list of
+   gate associations by typing in `3` and pressing `enter`. Here is the output we get:
+   ```text
+Gate A: 
+	outputTo: (AorB)
+
+Gate B: 
+	outputTo: (AorB)
+
+Gate C: 
+	outputTo: (Cnot)
+
+Gate (AorB): 
+	input1: A
+	input2: B
+	outputTo: ((AorB)and(Cnot))
+
+Gate (Cnot): 
+	input1: C
+	outputTo: ((AorB)and(Cnot))
+
+Gate ((AorB)and(Cnot)): 
+	input1: (AorB)
+	input2: (Cnot)
+```
+
+There are a ton of other things you can do, you can use the manual editor instead of using boolean expressions.
+The prompts should do a decent job of guiding you through this. You can also add existing circuit designs/gates (either from the standard lib
+or user lib, of which are the circuits you have made and saved). For each input of the gate/circuit design being added, it will list the current outputs from
+your gates from which you choose, this is the "wiring up" process. You can also delete although I forget how correctly this feature was implemented so
+sorry in advanced if it doesn't work, this is freshman level software design.
+
+### Contributions
+Not really looking for any contributions on this, was just a passion project from my freshman year in college that I want available to the community. 
+Wasn't trying to re-invent the wheel, was just really digging my Digital Design class and wanted to use what skills I had to try and emulate a circuit 
+designing tool.  
